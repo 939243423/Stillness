@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import { Canvas } from '@tarojs/components';
 
 export const ZenBackground = () => {
-  const canvasRef = useRef<any>(null);
 
   useEffect(() => {
     if (Taro.getEnv() !== Taro.ENV_TYPE.WEAPP) return;

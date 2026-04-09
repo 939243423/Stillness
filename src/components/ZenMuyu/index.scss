@@ -6,6 +6,17 @@
   position: relative;
   margin-top: 60px;
 
+  .muyu-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
   .zen-muyu-wrapper {
     width: 380px;
     height: 380px;

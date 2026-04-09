@@ -1,0 +1,22 @@
+.placeholder-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #fdfcfb;
+  
+  .title {
+    font-size: 44px;
+    font-weight: 600;
+    color: #4a3a3a;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+  }
+  
+  .content {
+    font-size: 30px;
+    color: #8c7b7b;
+    opacity: 0.8;
+  }
+}

@@ -1,49 +1,133 @@
-.mine {
-  min-height: 100vh;
-  background: #f5f5f5;
+.mine-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
 
-  &__header {
-    background: #07c160;
-    padding: 60px 32px 40px;
-    display: flex;
-    align-items: center;
+  .mine-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    padding: 100px 40px;
+    box-sizing: border-box;
   }
 
-  &__avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
+  .user-card {
     background: rgba(255, 255, 255, 0.4);
-    margin-right: 24px;
-  }
-
-  &__name {
-    font-size: 36px;
-    font-weight: bold;
-    color: #fff;
-  }
-
-  &__menu {
-    margin: 20px 0;
-    background: #fff;
-  }
-
-  &__menu-item {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 40px;
+    padding: 60px 40px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 32px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 28px;
-    color: #333;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    margin-bottom: 60px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
 
-    &:last-child {
-      border-bottom: none;
+    .avatar-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 4px solid #fff;
+      margin-right: 30px;
+      background: linear-gradient(135deg, #e2d1c3, #fdfcfb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .avatar-placeholder {
+        font-size: 40px;
+        color: #5d4037;
+        font-weight: bold;
+      }
+    }
+
+    .info-box {
+      .nickname {
+        font-size: 36px;
+        font-weight: 700;
+        color: #5d4037;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .status {
+        font-size: 24px;
+        color: #8d6e63;
+        opacity: 0.7;
+      }
     }
   }
 
-  &__arrow {
-    color: #ccc;
-    font-size: 36px;
+  .section-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #5d4037;
+    margin-bottom: 30px;
+    padding-left: 10px;
+  }
+
+  .achievement-scroll {
+    display: flex;
+    margin-bottom: 60px;
+    padding-bottom: 20px;
+
+    .achievement-card {
+      min-width: 200px;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 30px;
+      border-radius: 30px;
+      margin-right: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      .icon { font-size: 40px; margin-bottom: 10px; }
+      .value { font-size: 32px; font-weight: 700; color: #5d4037; }
+      .label { font-size: 20px; color: #8d6e63; }
+    }
+  }
+
+  .menu-list {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 40px;
+    overflow: hidden;
+    margin-bottom: 60px;
+
+    .menu-item {
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(93, 64, 55, 0.05);
+
+      &:active { background: rgba(255, 255, 255, 0.2); }
+      &:last-child { border-bottom: none; }
+
+      .menu-icon { font-size: 32px; margin-right: 20px; }
+      .menu-title { font-size: 28px; color: #5d4037; flex: 1; }
+      .menu-arrow {
+        width: 12px;
+        height: 12px;
+        border-right: 3px solid #8d6e63;
+        border-bottom: 3px solid #8d6e63;
+        transform: rotate(-45deg);
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .footer {
+    text-align: center;
+    padding-bottom: 140px;
+    display: flex;
+    flex-direction: column;
+    color: #8d6e63;
+    opacity: 0.5;
+    font-size: 20px;
+
+    .ver { margin-top: 10px; font-family: monospace; }
   }
 }

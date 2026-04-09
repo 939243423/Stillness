@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
-import Taro from '@tarojs/taro';
 import { ZenBackground } from '../../components/ZenBackground';
 import { ZenMuyu } from '../../components/ZenMuyu';
+import { WishBottle } from '../../components/WishBottle';
+import { FortuneCard } from '../../components/FortuneCard';
 import { useRewardAd } from '../../hooks/useRewardAd';
 import { generateZenSeed, drawFortune } from '../../services/zenService';
 import './index.scss';
@@ -10,36 +12,35 @@ import './index.scss';
 export default function Index() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [mode, setMode] = useState<'muyu' | 'bottle'>('muyu');
   const { showAd } = useRewardAd();
 
-  const handleDraw = useCallback(async () => {
-    // 1. 尝试显示广告（商业闭环）
-    const immediate = await showAd();
-    if (!immediate) return; // 如果返回 false，说明正在展示广告，等待回调
+  useDidShow(() => {
+    // TabBar 状态由组件内部 useDidShow 自感知同步，此处无需手动设置
+  });
 
+  const handleDraw = useCallback(async () => {
+    const immediate = await showAd();
+    if (!immediate) return;
     executeDraw();
   }, [showAd]);
 
   const executeDraw = useCallback(async () => {
     setLoading(true);
     setResult(null);
-
-    // 2. 模拟“占卜中”仪式感 Loading (1.5s)
     await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // 3. 生成玄学种子并抽取结果
     const seed = await generateZenSeed();
     const fortune = drawFortune(seed);
-
     setResult(fortune);
     setLoading(false);
-    
-    Taro.vibrateLong(); // 抽中结果时的强烈反馈
+
+    // 增加累计签文
+    const count = Taro.getStorageSync('fortune_count') || 0;
+    Taro.setStorageSync('fortune_count', count + 1);
   }, []);
 
   return (
     <View className='index'>
-      {/* 动态 Canvas 背景 */}
       <ZenBackground />
 
       <View className='index__content'>
@@ -48,45 +49,42 @@ export default function Index() {
           <Text className='subtitle'>极致优雅 · 治愈身心</Text>
         </View>
 
-        {/* 拟物化木鱼交互区 */}
+        {/* 模式切换器 */}
         {!result && !loading && (
-          <View className='content-center'>
-            <ZenMuyu />
-            <Text style={{ color: '#8d6e63', fontSize: '24rpx', marginTop: '20rpx', opacity: 0.6 }}>
-              敲击木鱼，静候灵光
-            </Text>
+          <View className='zen-tabs'>
+            <View className={`tab ${mode === 'muyu' ? 'active' : ''}`} onClick={() => setMode('muyu')}>禅听木鱼</View>
+            <View className={`tab ${mode === 'bottle' ? 'active' : ''}`} onClick={() => setMode('bottle')}>流光许愿</View>
           </View>
         )}
 
-        {/* 抽签结果展示 */}
+        {/* 交互核心区 */}
+        {!result && !loading && (
+          <View className='content-center'>
+            {mode === 'muyu' ? <ZenMuyu /> : <WishBottle />}
+          </View>
+        )}
+
+        {/* 抽签结果与分享 */}
         {(loading || result) && (
-          <View className='fortune-result'>
+          <View className='result-modal'>
             {loading ? (
-              <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <View className='loading-state'>
                 <View className='loading-spinner' />
-                <Text style={{ color: '#5d4037', marginTop: '20rpx' }}>正在为您感知禅意...</Text>
+                <Text>正在为您感知禅意...</Text>
               </View>
             ) : (
-              <View>
-                <Text className='level'>{result.level}</Text>
-                <Text className='poem'>{result.poem}</Text>
-                <Text className='advice'>{result.advice}</Text>
-                <View 
-                  className='zen-draw-btn' 
-                  style={{ marginTop: '60rpx', width: '200rpx', height: '80rpx', fontSize: '24rpx' }}
-                  onClick={() => setResult(null)}
-                >
-                  返回
-                </View>
+              <View className='result-view'>
+                <FortuneCard data={result} />
+                <View className='btn-back' onClick={() => setResult(null)}>返回修行</View>
               </View>
             )}
           </View>
         )}
 
-        {/* 底部交互按钮 */}
+        {/* 开启按钮 */}
         {!loading && !result && (
-          <View className={`zen-draw-btn ${loading ? 'is-loading' : ''}`} onClick={handleDraw}>
-            {loading ? <View className='loading-spinner' /> : '开启今日签文'}
+          <View className='zen-draw-btn' onClick={handleDraw}>
+            开启今日签文
           </View>
         )}
       </View>
