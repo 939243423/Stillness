@@ -1,0 +1,24 @@
+.index {
+  min-height: 100vh;
+  background: #f5f5f5;
+
+  &__header {
+    background: #07c160;
+    padding: 40px 32px 30px;
+  }
+
+  &__title {
+    font-size: 40px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  &__content {
+    padding: 32px;
+  }
+
+  &__desc {
+    font-size: 28px;
+    color: #666;
+  }
+}

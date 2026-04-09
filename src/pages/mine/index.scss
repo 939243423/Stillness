@@ -1,0 +1,49 @@
+.mine {
+  min-height: 100vh;
+  background: #f5f5f5;
+
+  &__header {
+    background: #07c160;
+    padding: 60px 32px 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    margin-right: 24px;
+  }
+
+  &__name {
+    font-size: 36px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  &__menu {
+    margin: 20px 0;
+    background: #fff;
+  }
+
+  &__menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 28px;
+    color: #333;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__arrow {
+    color: #ccc;
+    font-size: 36px;
+  }
+}
