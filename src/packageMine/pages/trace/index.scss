@@ -1,22 +1,138 @@
-.placeholder-page {
+.trace-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: #fdfcfb;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: #fdfcfb;
-  
-  .title {
-    font-size: 44px;
-    font-weight: 600;
-    color: #4a3a3a;
-    margin-bottom: 24px;
-    letter-spacing: 2px;
+
+  .trace-header {
+    position: relative;
+    z-index: 10;
+    padding: 100px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .title {
+      font-size: 48px;
+      font-weight: bold;
+      color: #3e2723;
+    }
+    .subtitle {
+      font-size: 26px;
+      color: #8d6e63;
+      opacity: 0.8;
+    }
   }
-  
-  .content {
-    font-size: 30px;
-    color: #8c7b7b;
-    opacity: 0.8;
+
+  .trace-list {
+    position: relative;
+    z-index: 10;
+    flex: 1;
+    padding: 0 40px;
+    box-sizing: border-box;
+
+    .trace-item {
+      display: flex;
+      margin-bottom: 60px;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 100px;
+        top: 40px;
+        bottom: -60px;
+        width: 1px;
+        background: rgba(141, 110, 99, 0.2);
+      }
+
+      &:last-child::before {
+        display: none;
+      }
+
+      .item-time {
+        width: 120px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-top: 10px;
+
+        .date {
+          font-size: 20px;
+          color: #8d6e63;
+        }
+        .time {
+          font-size: 28px;
+          font-weight: bold;
+          color: #5d4037;
+        }
+      }
+
+      .item-card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        margin-left: 40px;
+        border-radius: 24px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+
+          .level {
+            font-size: 32px;
+            font-weight: bold;
+            color: #b71c1c;
+          }
+          .seal {
+            background: #b71c1c;
+            color: #fff;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 4px;
+          }
+        }
+
+        .poem {
+          font-size: 28px;
+          color: #3e2723;
+          margin-bottom: 12px;
+          display: block;
+        }
+        .advice {
+          font-size: 22px;
+          color: #8d6e63;
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 200px;
+    color: #8d6e63;
+    gap: 20px;
+
+    .icon {
+      font-size: 80px;
+    }
+  }
+
+  .list-footer {
+    text-align: center;
+    padding: 60px 0 100px;
+    font-size: 24px;
+    color: #bdbdbd;
   }
 }

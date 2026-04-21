@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import Taro, { useDidShow } from '@tarojs/taro';
+import { useState, useCallback, useEffect } from 'react';
+import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import './index.scss';
 
@@ -21,16 +21,26 @@ export default function CustomTabBar() {
     }
   ];
 
-  // 路径自感知逻辑
-  useDidShow(() => {
+  // 路径自感知逻辑：通过监听自定义事件来实现无感同步
+  useEffect(() => {
+    const handleSync = (index: number) => {
+      if (index !== selected) {
+        setSelected(index);
+      }
+    };
+    Taro.eventCenter.on('syncTabBar', handleSync);
+    
+    // 首次加载初始化
     const curPages = Taro.getCurrentPages();
     const currPage = curPages[curPages.length - 1];
     const path = '/' + (currPage?.route || '');
     const index = list.findIndex(item => item.pagePath === path);
-    if (index !== -1 && index !== selected) {
-      setSelected(index);
-    }
-  });
+    if (index !== -1) setSelected(index);
+
+    return () => {
+      Taro.eventCenter.off('syncTabBar', handleSync);
+    };
+  }, [selected]);
 
   const switchTab = useCallback((index, url) => {
     setSelected(index);
@@ -50,7 +60,6 @@ export default function CustomTabBar() {
             src={selected === index ? item.selectedIconPath : item.iconPath} 
           />
           <Text className='tab-text'>{item.text}</Text>
-          {selected === index && <View className='tab-active-dot' />}
         </View>
       ))}
     </View>

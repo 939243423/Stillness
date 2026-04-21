@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
+import { useTabActive } from '../../hooks/useTabActive';
 import './index.scss';
 
 export default function Mine() {
@@ -10,6 +11,8 @@ export default function Mine() {
     fortune: 0,
     wish: 0
   });
+
+  useTabActive(1);
 
   useDidShow(() => {
     // 获取统计数据 (从 Storage 获取)

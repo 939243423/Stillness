@@ -1,22 +1,57 @@
+.wish-bottle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  animation: levitate 4s ease-in-out infinite;
+}
+
 .wish-bottle {
   width: 320px;
   height: 480px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: transparent; // 关键：背景设为透明，让 Canvas 内部的绘制决定颜色
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border-radius: 120px 120px 40px 40px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 4px solid rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.1),
+    inset 0 0 40px rgba(255, 255, 255, 0.2);
+
+  .bottle-cap {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background: linear-gradient(to bottom, #f5f5f5, #ddd);
+    border-radius: 10px 10px 0 0;
+    border-bottom: 4px solid rgba(0, 0, 0, 0.1);
+    z-index: 3;
+    &::after {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 20px;
+      background: #eee;
+      border-radius: 8px 8px 2px 2px;
+    }
+  }
 
   .bottle-gloss {
     position: absolute;
-    top: 5%;
+    top: 10%;
     left: 15%;
-    width: 20%;
-    height: 60%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
-    border-radius: 20px;
+    width: 15%;
+    height: 70%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.35), transparent);
+    border-radius: 30px;
     z-index: 2;
     pointer-events: none;
   }
@@ -26,4 +61,28 @@
     height: 100%;
     z-index: 1;
   }
+
+  .zen-floating {
+    position: absolute;
+    color: #5d4037;
+    font-size: 28px;
+    font-weight: 200;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: flowUp 2s ease-out forwards;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    z-index: 5;
+  }
+}
+
+@keyframes levitate {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+
+@keyframes flowUp {
+  0% { transform: translate(-50%, 0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translate(-50%, -120px); opacity: 0; }
 }

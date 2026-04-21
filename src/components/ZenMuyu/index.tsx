@@ -10,16 +10,19 @@ export const ZenMuyu = () => {
   const [scale, setScale] = useState(1);
   const [floatings, setFloatings] = useState<any[]>([]);
   const ctxRef = useRef<any>(null);
+  const canvasRef = useRef<any>(null);
+  const splashAnimsRef = useRef<number[]>([]);
+  const isUnmounted = useRef(false);
 
   const drawSplash = useCallback((x: number, y: number) => {
-    if (!ctxRef.current) return;
+    if (!ctxRef.current || isUnmounted.current) return;
     const ctx = ctxRef.current;
     let radius = 0;
     let opacity = 0.5;
 
     const animate = () => {
-      if (opacity <= 0) {
-        ctx.clearRect(0, 0, 400, 400); // 简单清理
+      if (isUnmounted.current || opacity <= 0) {
+        if (ctxRef.current && !isUnmounted.current) ctx.clearRect(0, 0, 400, 400); 
         return;
       }
       ctx.beginPath();
@@ -29,12 +32,14 @@ export const ZenMuyu = () => {
       
       radius += 4;
       opacity -= 0.02;
-      requestAnimationFrame(animate);
+      const animId = (canvasRef.current?.requestAnimationFrame || requestAnimationFrame)(animate);
+      splashAnimsRef.current.push(animId);
     };
     animate();
   }, []);
 
   const handleClick = useCallback((e) => {
+    if (isUnmounted.current) return;
     Taro.vibrateShort({ type: 'light' });
     
     // 水墨晕染位置计算 (相对于容器)
@@ -48,28 +53,41 @@ export const ZenMuyu = () => {
     Taro.setStorageSync('muyu_count', count + 1);
     
     setScale(0.85); // 增加下陷感
-    setTimeout(() => setScale(1.05), 100);
-    setTimeout(() => setScale(1), 300);
+    setTimeout(() => { if (!isUnmounted.current) setScale(1.05); }, 100);
+    setTimeout(() => { if (!isUnmounted.current) setScale(1); }, 300);
 
     // 3. 产生漂浮文字
     const id = Date.now();
     const text = ZEN_TEXTS[Math.floor(Math.random() * ZEN_TEXTS.length)];
     setFloatings((prev) => [...prev, { id, x: clientX, y: clientY - 50, text }]);
-    setTimeout(() => setFloatings((prev) => prev.filter((f) => f.id !== id)), 2000);
+    setTimeout(() => {
+      if (!isUnmounted.current) {
+        setFloatings((prev) => prev.filter((f) => f.id !== id));
+      }
+    }, 2000);
   }, [drawSplash]);
 
   useEffect(() => {
+    isUnmounted.current = false;
     if (Taro.getEnv() !== Taro.ENV_TYPE.WEAPP) return;
     const query = Taro.createSelectorQuery();
     query.select('#muyuCanvas').fields({ node: true, size: true }).exec((res) => {
-      if (!res[0]) return;
+      if (!res[0] || isUnmounted.current) return;
       const canvas = res[0].node;
-      const dpr = Taro.getSystemInfoSync().pixelRatio;
+      const dpr = Taro.getWindowInfo().pixelRatio;
       canvas.width = res[0].width * dpr;
       canvas.height = res[0].height * dpr;
+      canvasRef.current = canvas;
       ctxRef.current = canvas.getContext('2d');
       ctxRef.current.scale(dpr, dpr);
     });
+
+    return () => {
+      isUnmounted.current = true;
+      const cancel = canvasRef.current?.cancelAnimationFrame || cancelAnimationFrame;
+      splashAnimsRef.current.forEach(id => cancel(id));
+      splashAnimsRef.current = [];
+    };
   }, []);
 
   return (

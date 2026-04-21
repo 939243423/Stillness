@@ -12,6 +12,11 @@ export const FORTUNE_POOL = [
 ];
 
 /**
+ * 印章称号池
+ */
+export const SEAL_ROLES = ['修行', '禅心', '随缘', '精进', '持戒', '布施', '忍辱', '禅定', '智慧', '无我'];
+
+/**
  * 简单的 Hash 函数
  */
 const hashString = (str: string) => {
@@ -50,5 +55,9 @@ export const generateZenSeed = async () => {
  */
 export const drawFortune = (seed: number) => {
   const index = seed % FORTUNE_POOL.length;
-  return FORTUNE_POOL[index];
+  const sealIndex = (seed * 7) % SEAL_ROLES.length;
+  return {
+    ...FORTUNE_POOL[index],
+    seal: SEAL_ROLES[sealIndex]
+  };
 };

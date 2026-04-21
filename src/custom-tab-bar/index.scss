@@ -3,13 +3,14 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  height: 100px; /* 适当减小高度提升比例平衡感 */
+  background: hsla(0, 0%, 100%, 0.7);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-top: 1px solid hsla(0, 0%, 100%, 0.5);
+  box-shadow: 0 -10px 40px hsla(0, 0%, 0%, 0.05); /* 增加微妙的上浮阴影 */
   z-index: 1000;
 
   .tab-item {
@@ -19,44 +20,47 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    transition: all 0.3s;
+    padding-top: 15px; /* 确保垂直居中偏上，留出呼吸感 */
 
     .tab-icon {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 8px;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      width: 44px; /* 轻微调整图标尺寸 */
+      height: 44px;
+      margin-bottom: 6px;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
     .tab-text {
-      font-size: 20px;
-      color: #8d6e63;
+      font-size: 18px; /* 字体微调更显精致 */
+      color: hsla(16, 18%, 49%, 0.8);
+      transition: all 0.3s;
     }
 
     &.active {
       .tab-icon {
-        transform: translateY(-8px) scale(1.1);
+        transform: translateY(-8px);
+        filter: drop-shadow(0 4px 10px hsla(16, 25%, 38%, 0.2));
       }
       .tab-text {
-        color: #5d4037;
-        font-weight: 600;
+        color: hsl(16, 25%, 29%);
+        font-weight: 500;
+        letter-spacing: 1px;
       }
     }
 
     .tab-active-dot {
       position: absolute;
-      bottom: 20px;
-      width: 8px;
-      height: 8px;
-      background: #5d4037;
+      bottom: 22px;
+      width: 6px;
+      height: 6px;
+      background: hsl(16, 25%, 29%);
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(93, 64, 55, 0.4);
-      animation: dotPop 0.3s ease-out;
+      box-shadow: 0 4px 12px hsla(16, 25%, 29%, 0.4);
+      animation: dotPop 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
   }
 }
 
 @keyframes dotPop {
-  0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { transform: scale(0) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
 }
