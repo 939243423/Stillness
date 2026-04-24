@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../../components/ZenBackground';
+import { useTheme } from '../../../hooks/useTheme';
 import './index.scss';
 
 const ARCHETYPES = [
@@ -23,6 +24,7 @@ const MEMORY_MODES = [
 ];
 
 export default function Config() {
+  const themeClass = useTheme();
   const [config, setConfig] = useState({
     archetype: '温暖感应者',
     tone: '温和委婉',
@@ -47,8 +49,8 @@ export default function Config() {
   };
 
   return (
-    <View className='config-page'>
-      <ZenBackground color='#FDFCFB' intensity={0.15} speed={0.1} />
+    <View className={`config-page ${themeClass}`}>
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.15} speed={0.1} />
       
       <View className='config-header'>
          <Text className='title'>共鸣配置</Text>

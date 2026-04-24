@@ -63,7 +63,7 @@ export const ZenBackground = ({ color = '#FDFCFB', intensity = 0.3, speed = 0.2 
             // 降低透明度阈值，让边界更模糊
             const alpha = Math.floor(targetIntensity * 80).toString(16).padStart(2, '0');
             gradient.addColorStop(0, `${targetColor}${alpha}`); 
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            gradient.addColorStop(1, `${targetColor}00`);
             ctx.fillStyle = gradient;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);

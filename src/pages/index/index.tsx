@@ -6,6 +6,7 @@ import { useRewardAd } from '../../hooks/useRewardAd';
 import { getResonanceResponse, getFinalSoulInsight } from '../../services/aiService';
 import { useTabActive } from '../../hooks/useTabActive';
 import AudioService from '../../services/audioService';
+import { useTheme } from '../../hooks/useTheme';
 import './index.scss';
 
 const ResonanceRhythm = lazy(() => import('../../components/ResonanceRhythm').then(m => ({ default: m.ResonanceRhythm })));
@@ -264,11 +265,13 @@ export default function Index() {
     });
   }, []);
 
+  const themeClass = useTheme();
+
   return (
-    <View className='index'>
+    <View className={`index ${themeClass}`}>
       {/* 动态背景 */}
       <ZenBackground 
-        color={visualState.color} 
+        color={themeClass === 'dark-theme' ? '#000000' : visualState.color} 
         intensity={visualState.intensity} 
         speed={isResonanceActive ? visualState.flowSpeed : getFlowSpeed()} 
       />

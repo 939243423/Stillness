@@ -3,9 +3,11 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
 import { useTabActive } from '../../hooks/useTabActive';
+import { useTheme } from '../../hooks/useTheme';
 import './index.scss';
 
 export default function Mine() {
+  const themeClass = useTheme();
   const [stats, setStats] = useState({
     resonance: 0,
     insight: 0,
@@ -55,8 +57,8 @@ export default function Mine() {
   ];
 
   return (
-    <View className='mine-page'>
-      <ZenBackground color='#FDFCFB' intensity={0.2} speed={0.1} />
+    <View className={`mine-page ${themeClass}`}>
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.2} speed={0.1} />
       
       <ScrollView className='mine-content' scrollY showScrollbar={false} enhanced>
         {/* 用户信息卡片 (高阶极简) */}

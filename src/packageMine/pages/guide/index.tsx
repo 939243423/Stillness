@@ -1,5 +1,6 @@
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../../components/ZenBackground';
+import { useTheme } from '../../../hooks/useTheme';
 import './index.scss';
 
 const GUIDE_SECTIONS = [
@@ -24,9 +25,10 @@ const GUIDE_SECTIONS = [
 ];
 
 export default function Guide() {
+  const themeClass = useTheme();
   return (
-    <View className='guide-page'>
-      <ZenBackground color='#FDFCFB' intensity={0.15} speed={0.1} />
+    <View className={`guide-page ${themeClass}`}>
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.15} speed={0.1} />
       
       <View className='guide-header'>
         <Text className='title'>灵魂感应手册</Text>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Taro, { useRouter } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../../components/ZenBackground';
+import { useTheme } from '../../../hooks/useTheme';
 import './detail.scss';
 
 interface Message {
@@ -20,6 +21,7 @@ interface HistoryRecord {
 }
 
 export default function ResonanceDetail() {
+  const themeClass = useTheme();
   const router = useRouter();
   const { id } = router.params;
   const [record, setRecord] = useState<HistoryRecord | null>(null);
@@ -40,8 +42,8 @@ export default function ResonanceDetail() {
   if (!record) return null;
 
   return (
-    <View className='detail-page'>
-      <ZenBackground color='#FDFCFB' intensity={0.15} speed={0.05} />
+    <View className={`detail-page ${themeClass}`}>
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.15} speed={0.05} />
       
       <View className='detail-header'>
         <View className='back-btn' onClick={() => Taro.navigateBack()} />

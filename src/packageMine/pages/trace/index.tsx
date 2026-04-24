@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../../components/ZenBackground';
+import { useTheme } from '../../../hooks/useTheme';
 import './index.scss';
 
 interface HistoryRecord {
@@ -15,6 +16,7 @@ interface HistoryRecord {
 }
 
 export default function Trace() {
+  const themeClass = useTheme();
   const [history, setHistory] = useState<HistoryRecord[]>([]);
 
   useDidShow(() => {
@@ -23,8 +25,8 @@ export default function Trace() {
   });
 
   return (
-    <View className='trace-page'>
-      <ZenBackground />
+    <View className={`trace-page ${themeClass}`}>
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} />
       
       <View className='trace-header'>
         <Text className='title'>共鸣印记</Text>

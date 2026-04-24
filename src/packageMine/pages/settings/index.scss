@@ -1,10 +1,11 @@
 .settings-page {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
-  background: #fdfcfb;
+  background: var(--bg-color);
   display: flex;
   flex-direction: column;
+  transition: background 0.5s ease;
 
   .settings-header {
     padding: 120px 40px 60px;
@@ -15,12 +16,12 @@
     .title {
       font-size: 44px;
       font-weight: 500;
-      color: #2c3e50;
+      color: var(--text-primary);
       letter-spacing: 4px;
     }
     .subtitle {
       font-size: 24px;
-      color: #b2bec3;
+      color: var(--text-secondary);
       font-weight: 300;
       letter-spacing: 2px;
     }
@@ -31,12 +32,12 @@
     padding: 20px 40px;
 
     .settings-section {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--card-bg);
       border-radius: 40px;
       padding: 50px 40px;
       margin-bottom: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 20px 40px rgba(44, 62, 80, 0.02);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02);
 
       &:last-child {
         margin-bottom: 0;
@@ -46,7 +47,7 @@
         margin-bottom: 30px;
         .section-title {
           font-size: 28px;
-          color: #2c3e50;
+          color: var(--text-primary);
           font-weight: 500;
           letter-spacing: 2px;
           display: block;
@@ -64,13 +65,13 @@
         gap: 15px;
 
         .option-item {
-          background: rgba(255, 255, 255, 0.4);
+          background: var(--glass-bg);
           padding: 35px 40px;
           border-radius: 30px;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          border: 1px solid rgba(255, 255, 255, 0.6);
+          border: 1px solid var(--glass-border);
           transition: all 0.3s;
 
           &.active {
@@ -91,7 +92,7 @@
 
             .option-label {
               font-size: 28px;
-              color: #34495e;
+              color: var(--text-primary);
               font-weight: 500;
             }
             .option-desc {
