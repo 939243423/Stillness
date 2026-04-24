@@ -61,8 +61,20 @@ export default function Trace() {
             </View>
             
             <View className='seed-grid'>
-              {['我有话想对自己说...', '分享此刻的云淡风轻', '记录那抹突如其来的感伤', '最近遇到了一个有趣的人'].map((seed, i) => (
-                <View key={i} className='seed-item' onClick={() => Taro.switchTab({ url: '/pages/index/index' })}>
+              {[
+                '我有话想对自己说...', 
+                '想念那个曾被大雨淋湿的人', 
+                '记录这抹突如其来的平静', 
+                '今天发生了一件有趣的小事'
+              ].map((seed, i) => (
+                <View 
+                  key={i} 
+                  className='seed-item' 
+                  onClick={() => {
+                    Taro.setStorageSync('resonance_seed', seed);
+                    Taro.switchTab({ url: '/pages/index/index' });
+                  }}
+                >
                   <Text>{seed}</Text>
                 </View>
               ))}

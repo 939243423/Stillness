@@ -26,7 +26,7 @@ export const WishBottle = () => {
       if (!res[0] || isUnmounted.current) return;
       const canvas = res[0].node;
       const ctx = canvas.getContext('2d');
-      const dpr = Taro.getSystemInfoSync().pixelRatio;
+      const dpr = Taro.getWindowInfo().pixelRatio;
       const width = res[0].width;
       const height = res[0].height;
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
-import { View, Text, ScrollView } from '@tarojs/components';
+import { View, Text, ScrollView, Button, Input, Image } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
 import { useTabActive } from '../../hooks/useTabActive';
 import { useTheme } from '../../hooks/useTheme';
@@ -14,10 +14,15 @@ export default function Mine() {
     calm: 0
   });
 
+  const [userInfo, setUserInfo] = useState({
+    avatarUrl: '',
+    nickName: '灵魂旅行者'
+  });
+
   useTabActive(1);
 
   useDidShow(() => {
-    // 从存储中获取最新的数据
+    // 加载统计数据
     const resonanceCount = Taro.getStorageSync('resonance_count') || 0;
     const history = Taro.getStorageSync('resonance_history') || [];
     setStats({ 
@@ -25,7 +30,27 @@ export default function Mine() {
       insight: history.length,
       calm: Math.floor(resonanceCount * 1.5)
     });
+
+    // 加载用户信息
+    const savedInfo = Taro.getStorageSync('user_info');
+    if (savedInfo) {
+      setUserInfo(savedInfo);
+    }
   });
+
+  const onChooseAvatar = (e) => {
+    const { avatarUrl } = e.detail;
+    const newInfo = { ...userInfo, avatarUrl };
+    setUserInfo(newInfo);
+    Taro.setStorageSync('user_info', newInfo);
+  };
+
+  const onNicknameBlur = (e) => {
+    const nickName = e.detail.value;
+    const newInfo = { ...userInfo, nickName };
+    setUserInfo(newInfo);
+    Taro.setStorageSync('user_info', newInfo);
+  };
 
   const soulInsights = [
     { label: '共鸣次数', value: stats.resonance, iconClass: 'icon-resonance' },
@@ -63,14 +88,30 @@ export default function Mine() {
       <ScrollView className='mine-content' scrollY showScrollbar={false} enhanced>
         {/* 用户信息卡片 (高阶极简) */}
         <View className='user-card'>
-          <View className='avatar-container'>
-             <View className='avatar-glow' />
-             <View className='avatar-placeholder'>
-                <Text>Soul</Text>
-             </View>
-          </View>
+          <Button 
+            className='avatar-btn' 
+            openType='chooseAvatar' 
+            onChooseAvatar={onChooseAvatar}
+          >
+            <View className='avatar-container'>
+              <View className='avatar-glow' />
+              {userInfo.avatarUrl ? (
+                <Image className='user-avatar' src={userInfo.avatarUrl} mode='aspectFill' />
+              ) : (
+                <View className='avatar-placeholder'>
+                  <Text>Soul</Text>
+                </View>
+              )}
+            </View>
+          </Button>
           <View className='info-box'>
-            <Text className='nickname'>灵魂旅行者</Text>
+            <Input 
+              className='nickname-input' 
+              type='nickname' 
+              value={userInfo.nickName} 
+              onBlur={onNicknameBlur}
+              placeholder='输入灵魂昵称'
+            />
             <Text className='status'>已与自我共鸣 {stats.resonance} 次</Text>
           </View>
         </View>

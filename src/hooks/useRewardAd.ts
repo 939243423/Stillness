@@ -61,7 +61,7 @@ export const useRewardAd = (adUnitId: string = 'YOUR_AD_UNIT_ID') => {
     setIsEnded(false);
 
     // Mock 模式：组件未初始化、占位 ID 或处于 IDE 环境
-    const isIDE = Taro.getSystemInfoSync().platform === 'devtools';
+    const isIDE = Taro.getDeviceInfo().platform === 'devtools';
     if (!videoAd.current || adUnitId === 'YOUR_AD_UNIT_ID' || isIDE) {
       await new Promise(resolve => setTimeout(resolve, 600)); // 模拟快速加载
       setIsEnded(true);

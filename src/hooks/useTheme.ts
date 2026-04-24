@@ -18,7 +18,7 @@ export function useTheme() {
       if (hour >= 20 || hour < 6) return 'dark';
       
       // 2. 检查系统主题 (需要基础库支持)
-      const systemInfo = Taro.getSystemInfoSync();
+      const systemInfo = Taro.getAppBaseInfo();
       if (systemInfo.theme === 'dark') return 'dark';
     }
 

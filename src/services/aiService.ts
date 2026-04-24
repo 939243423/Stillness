@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro';
 const SILICON_KEY = 'sk-grregxjdqfcoutmccnxxtkuqingipcosydblwiyefekktdcr';
 const BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions';
 
-export interface AIInsight {
+export interface SoulInsight {
   archetype: string;        // 灵魂原型，如 '星辰编织者'
   energyColor: string;      // 能量色 hex, 如 '#A8D5BA'
   vibeTags: string[];       // 氛围标签，如 ['#安静的爆发', '#以柔克刚']
@@ -125,7 +125,7 @@ export const getResonanceResponse = async (
 /**
  * 最终灵魂画像生成 (在第10轮后调用)
  */
-export const getFinalSoulInsight = async (history: any[]): Promise<AIInsight> => {
+export const getFinalSoulInsight = async (history: any[]): Promise<SoulInsight> => {
   try {
     const response = await Taro.request({
       url: BASE_URL,

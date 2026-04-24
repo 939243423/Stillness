@@ -12,7 +12,9 @@ export default defineAppConfig({
         'pages/config/index',
         'pages/settings/index',
         'pages/guide/index',
-        'pages/about/index'
+        'pages/about/index',
+        'pages/about/terms',
+        'pages/about/privacy'
       ]
     }
   ],

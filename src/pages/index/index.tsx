@@ -3,7 +3,7 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Textarea, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
 import { useRewardAd } from '../../hooks/useRewardAd';
-import { getResonanceResponse, getFinalSoulInsight } from '../../services/aiService';
+import { getResonanceResponse, getFinalSoulInsight, SoulInsight } from '../../services/aiService';
 import { useTabActive } from '../../hooks/useTabActive';
 import AudioService from '../../services/audioService';
 import { useTheme } from '../../hooks/useTheme';
@@ -40,6 +40,17 @@ export default function Index() {
   useDidShow(() => {
     const sysSaved = Taro.getStorageSync('system_settings');
     if (sysSaved) setSystemSettings(prev => ({ ...prev, ...sysSaved }));
+
+    // 检查是否有携带过来的共鸣种子
+    const seed = Taro.getStorageSync('resonance_seed');
+    if (seed) {
+      setThought(seed);
+      Taro.removeStorageSync('resonance_seed');
+      // 延迟触发，确保 state 已更新且 UI 稳定
+      setTimeout(() => {
+        startResonance(seed); 
+      }, 300);
+    }
   });
 
   const getNightPreset = useCallback(() => {
@@ -64,7 +75,7 @@ export default function Index() {
       targetAura = getNightPreset();
     } else if (systemSettings.darkModeAuto) {
       const hour = new Date().getHours();
-      const isSystemDark = Taro.getSystemInfoSync().theme === 'dark';
+      const isSystemDark = Taro.getAppBaseInfo().theme === 'dark';
       // 满足时间 (19:00-05:00) 或 系统黑暗模式
       if (hour >= 19 || hour < 5 || isSystemDark) {
         targetAura = getNightPreset();
@@ -129,8 +140,9 @@ export default function Index() {
     Taro.showToast({ title: '已停止共鸣感应', icon: 'none' });
   }, []);
 
-  const startResonance = useCallback(async () => {
-    if (!thought.trim()) {
+  const startResonance = useCallback(async (overrideThought?: string) => {
+    const inputThought = overrideThought || thought;
+    if (!inputThought.trim()) {
       Taro.vibrateShort({ type: 'medium' });
       setShowTip(true);
       return;
@@ -144,12 +156,12 @@ export default function Index() {
     Taro.vibrateShort({ type: 'heavy' });
 
     setLoading(true);
-    const initialUserMsg = { role: 'user' as const, content: thought };
+    const initialUserMsg = { role: 'user' as const, content: inputThought };
     setChatHistory([initialUserMsg]);
     setThought('');
 
-    // 并行请求 AI
-    const aiPromise = getResonanceResponse([initialUserMsg], (task) => {
+    // 并行请求共鸣回响
+    const resonancePromise = getResonanceResponse([initialUserMsg], (task) => {
        requestTaskRef.current = task;
     });
 
@@ -159,12 +171,12 @@ export default function Index() {
       setRoundIndex(1);
       
       try {
-        const res = await aiPromise;
+        const res = await resonancePromise;
         setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
         setVisualState(res.visualTarget);
       } catch (e) {
         if (e.errMsg?.includes('abort')) return;
-        Taro.showToast({ title: '感应频率超时或中断', icon: 'none' });
+        Taro.showToast({ title: '感感应频率超时或中断', icon: 'none' });
       } finally {
         setLoading(false);
         requestTaskRef.current = null;
@@ -210,7 +222,7 @@ export default function Index() {
 
     Taro.showLoading({ title: '正在凝练灵魂印记...' });
     try {
-      const insight = await getFinalSoulInsight(chatHistory);
+      const insight: SoulInsight = await getFinalSoulInsight(chatHistory);
       const now = new Date();
       const newRecord = {
         id: Date.now(),
@@ -297,7 +309,7 @@ export default function Index() {
             />
           </View>
           <View className='resonance-action'>
-            <View className={`resonance-draw-btn ${isButtonActive ? 'active' : ''}`} onClick={startResonance}>
+            <View className={`resonance-draw-btn ${isButtonActive ? 'active' : ''}`} onClick={() => startResonance()}>
               即时共鸣
               <View className='btn-effect' />
             </View>

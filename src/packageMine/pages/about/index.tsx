@@ -1,6 +1,7 @@
+import Taro from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
-import { ZenBackground } from '../../../components/ZenBackground';
 import { useTheme } from '../../../hooks/useTheme';
+import { ZenBackground } from '../../../components/ZenBackground';
 import './index.scss';
 
 export default function About() {
@@ -32,7 +33,7 @@ export default function About() {
             <Text className='section-title'>技术哲学</Text>
           </View>
           <Text className='section-text'>
-            “灵魂共鸣” 搭载了先进的感应算法模型。它不提供教条式的建议，而是通过对文字张力与情感深度的捕捉，模拟出最契合用户当下的意识回响，辅助用户完成自我洞察。
+            “灵魂共鸣” 搭载了先进的感应回响机制。它不提供教条式的建议，而是通过对文字张力与情感深度的捕捉，模拟出最契合用户当下的意识回响，辅助用户完成自我洞察。
           </Text>
         </View>
 
@@ -46,10 +47,10 @@ export default function About() {
         </View>
 
         <View className='about-footer'>
-          <Text className='footer-link'>服务协议</Text>
+          <Text className='footer-link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/terms' })}>服务协议</Text>
           <View className='divider' />
-          <Text className='footer-link'>隐私政策</Text>
-          <View className='copyright'>© 2024 Soul Resonance Team</View>
+          <Text className='footer-link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/privacy' })}>隐私政策</Text>
+          <View className='copyright'>© 2026 Soul Resonance Team</View>
         </View>
       </ScrollView>
     </View>
