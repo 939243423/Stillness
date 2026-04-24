@@ -1,0 +1,104 @@
+.resonance-tip-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.4s ease;
+
+  .tip-card {
+    width: 560px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(30px);
+    border-radius: 60px;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    .bear-container {
+      width: 320px;
+      height: 320px;
+      margin-bottom: 40px;
+      position: relative;
+      
+      .bear-image {
+        width: 100%;
+        height: 100%;
+        animation: floatBear 4s infinite ease-in-out;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 20%;
+        right: 20%;
+        height: 10px;
+        background: rgba(0, 0, 0, 0.05);
+        filter: blur(8px);
+        border-radius: 50%;
+        animation: shadowPulse 4s infinite ease-in-out;
+      }
+    }
+
+    .tip-message {
+      font-size: 32px;
+      color: #2c3e50;
+      font-weight: 500;
+      letter-spacing: 2px;
+      margin-bottom: 60px;
+      text-align: center;
+    }
+
+    .tip-action {
+      background: #a8d5ba;
+      padding: 24px 80px;
+      border-radius: 40px;
+      box-shadow: 0 10px 20px rgba(168, 213, 186, 0.3);
+      transition: all 0.3s;
+
+      &:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+      }
+
+      .action-text {
+        color: #fff;
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: 4px;
+      }
+    }
+  }
+}
+
+@keyframes floatBear {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-30px) rotate(2deg); }
+}
+
+@keyframes shadowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(0.7); opacity: 0.2; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(100px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

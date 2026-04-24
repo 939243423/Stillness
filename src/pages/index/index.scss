@@ -3,98 +3,493 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #fdfcfb 0%, #e2d1c3 100%);
+  background: linear-gradient(135deg, #fdfcfb 0%, #f5f7f2 100%);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
 
-  &__content {
-    position: relative;
+  &__header {
+    margin-top: 100px;
     z-index: 10;
-    width: 92%;
-    flex: 1;
-    margin: 40px 0 140px 0; // 留出充足的 TabBar 避让空间
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 60px 40px;
-    box-sizing: border-box;
-    justify-content: space-around;
-  }
-
-  .zen-tabs {
-    display: flex;
-    background: rgba(93, 64, 55, 0.05);
-    border-radius: 30px;
-    padding: 10px;
-    margin: 20px 0;
-
-    .tab {
-      padding: 15px 40px;
+    opacity: 0.7;
+    transition: all 0.5s ease;
+    &.mini {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    .quote-text {
       font-size: 26px;
-      color: #8d6e63;
-      border-radius: 20px;
-      transition: all 0.3s;
-
-      &.active {
-        background: #5d4037;
-        color: #fff;
-        box-shadow: 0 5px 15px rgba(93, 64, 55, 0.2);
-      }
+      color: #5d4037;
+      letter-spacing: 6px;
+      font-weight: 300;
     }
   }
 
-  .content-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  &__main {
+    width: 90%;
+    margin-top: 80px;
+    z-index: 10;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    &.pushed {
+      opacity: 0.3;
+      transform: scale(0.92) translateY(-80px);
+      filter: blur(8px);
+      pointer-events: none;
+    }
+    &.exiting {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(40px);
+      transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+
+    .diary-input-card {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(50px) saturate(180%);
+      -webkit-backdrop-filter: blur(50px) saturate(180%);
+      border-radius: 80px;
+      padding: 80px 60px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 
+        0 40px 100px rgba(168, 213, 186, 0.12),
+        inset 0 0 40px rgba(255, 255, 255, 0.5);
+      transition: transform 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+
+      &.shake {
+        animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        border-color: rgba(231, 76, 60, 0.3); // 淡淡的红色提醒
+      }
+
+      .card-header {
+        margin-bottom: 40px;
+        .greeting {
+          font-size: 40px;
+          color: #2c3e50;
+          font-weight: 300;
+          letter-spacing: 4px;
+        }
+      }
+
+      .thought-input {
+        width: 100%;
+        min-height: 220px;
+        font-size: 32px;
+        line-height: 1.8;
+        color: #2c3e50;
+        font-weight: 300;
+        &::placeholder {
+          color: rgba(44, 62, 80, 0.25);
+        }
+      }
+    }
+
+    .resonance-action {
+      margin-top: 80px;
+      display: flex;
+      justify-content: center;
+    }
   }
 
-  .result-modal {
+  .tools-tray {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(253, 252, 251, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.4s ease;
+    bottom: calc(100px + env(safe-area-inset-bottom) + 30px);
+    left: 40px;
+    right: 40px;
+    height: 110px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(50px) saturate(180%);
+    -webkit-backdrop-filter: blur(50px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    z-index: 50;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 55px;
+    box-shadow: 0 15px 45px rgba(168, 213, 186, 0.1);
 
-    .result-view {
+    &.expanded {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 80vh;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 80px 80px 0 0;
+      z-index: 1100;
+      box-shadow: 0 -20px 80px rgba(0, 0, 0, 0.05);
+    }
+
+    .tray-handle {
+      width: 100%;
+      height: 110px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      .handle-bar {
+        width: 80px;
+        height: 6px;
+        background: rgba(168, 213, 186, 0.3);
+        border-radius: 3px;
+      }
+      .handle-text {
+        font-size: 22px;
+        color: #7f8c8d;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-weight: 300;
+      }
+    }
+
+    .tools-content {
+      padding: 60px 50px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s;
+    }
+
+    &.expanded .tools-content {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tools-tabs {
+      display: flex;
+      background: rgba(168, 213, 186, 0.08);
+      padding: 10px;
+      border-radius: 50px;
+      margin: 0 auto 80px;
+      width: fit-content;
+      
+      .tool-tab {
+        padding: 18px 50px;
+        font-size: 26px;
+        color: #7f8c8d;
+        border-radius: 40px;
+        transition: all 0.3s;
+        &.active {
+          background: #a8d5ba;
+          color: #fff;
+          box-shadow: 0 8px 20px rgba(168, 213, 186, 0.3);
+        }
+      }
+    }
+
+    .tool-display {
       width: 100%;
-    }
-
-    .btn-back {
-      margin-top: 40px;
-      font-size: 28px;
-      color: #8d6e63;
-      text-decoration: underline;
+      height: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
   }
 
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    margin-right: 20px;
-    animation: rotate 1.2s linear infinite;
+  .resonance-draw-btn {
+    width: 85%;
+    height: 130px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(44, 62, 80, 0.5); // 提高对比度，确保能看清
+    border: 1px solid rgba(168, 213, 186, 0.3); // 稍微加深边框
+    font-size: 36px;
+    letter-spacing: 12px;
+    font-weight: 300;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
+    transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1); // 延长动画，改为呼吸感的曲线
+    position: relative;
+    overflow: hidden;
+
+    &.active {
+      background: #a8d5ba;
+      color: #fff;
+      border-color: #a8d5ba;
+      box-shadow: 0 20px 60px rgba(168, 213, 186, 0.45);
+      transform: scale(1.02);
+      animation: buttonBreathe 4s infinite ease-in-out; // 增加循环呼吸动效
+      
+      .btn-effect {
+        opacity: 1;
+      }
+    }
+
+    &:active {
+      transform: scale(0.96);
+      box-shadow: 0 15px 30px rgba(168, 213, 186, 0.3);
+      transition: all 0.2s; // 点击反馈快速响应
+    }
+
+    .btn-effect {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: sweep 4s infinite;
+    }
   }
+
+  .resonance-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    animation: stageEnter 1s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &.closing {
+      animation: stageExit 0.6s forwards cubic-bezier(0.64, 0, 0.78, 0);
+    }
+
+    .resonance-header {
+      padding: 100px 60px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .depth-indicator {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        .depth-dot {
+          width: 12px;
+          height: 12px;
+          background: #a8d5ba;
+          border-radius: 50%;
+          box-shadow: 0 0 15px #a8d5ba;
+        }
+        .depth-text {
+          font-size: 24px;
+          color: #2c3e50;
+          letter-spacing: 4px;
+          font-weight: 300;
+        }
+      }
+
+      .close-resonance {
+        font-size: 24px;
+        color: #95a5a6;
+        letter-spacing: 2px;
+        padding: 10px 20px;
+      }
+    }
+
+    .chat-scroll {
+      flex: 1;
+      width: 100%;
+      height: 0;
+      padding: 0 40px;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+
+      .chat-list {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding-bottom: 320px;
+
+        .chat-bubble {
+          max-width: 85%;
+          padding: 30px 40px;
+          border-radius: 40px;
+          font-size: 30px;
+          line-height: 1.6;
+          letter-spacing: 1px;
+          word-break: break-all;
+          animation: bubbleFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+
+          &.user {
+            align-self: flex-end;
+            background: rgba(168, 213, 186, 0.12);
+            color: #2c3e50;
+            border-radius: 40px 40px 4px 40px;
+            backdrop-filter: blur(5px);
+          }
+
+          &.assistant {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.45);
+            color: #34495e;
+            border-radius: 40px 40px 40px 4px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            
+            &.loading {
+              padding: 20px 40px;
+            }
+          }
+        }
+
+        .loading-aura {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 10px 0;
+          
+          .aura-text {
+            font-size: 24px;
+            color: rgba(168, 213, 186, 0.8);
+            letter-spacing: 4px;
+            animation: textBreathe 2s infinite ease-in-out;
+          }
+
+          .aura-dot {
+            width: 8px;
+            height: 8px;
+            background: #a8d5ba;
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: pulseWave 2s infinite ease-out;
+          }
+        }
+      }
+    }
+
+    .user-input-tray {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 40px 40px calc(40px + env(safe-area-inset-bottom));
+      background: linear-gradient(0deg, #fdfcfb 70%, transparent);
+      z-index: 110;
+
+      .input-wrapper {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(25px);
+        border-radius: 50px;
+        padding: 15px 30px;
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+
+        .input-area {
+          flex: 1;
+          min-height: 50px;
+          max-height: 240px;
+          font-size: 30px;
+          color: #2c3e50;
+          padding: 15px 0;
+        }
+
+        .send-trigger {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background: #ecf0f1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+          &.active {
+            background: #a8d5ba;
+            box-shadow: 0 8px 20px rgba(168, 213, 186, 0.4);
+            transform: scale(1.05);
+            
+            .send-icon {
+               transform: translateX(2px);
+            }
+          }
+
+          .send-icon {
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid #fff;
+            transition: transform 0.3s;
+          }
+        }
+      }
+    }
+  }
+}
+
+.ripple-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, transparent 80%);
+  filter: blur(40px);
+  animation: soulMistExpand 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  pointer-events: none;
+}
+
+.therapy-stage {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  animation: stageEnter 1s cubic-bezier(0.22, 1, 0.36, 1);
+  
+  &.closing {
+    animation: stageExit 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+  }
+}
+
+@keyframes soulMistExpand {
+  0% { transform: scale(0.5); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+@keyframes stageExit {
+  from { opacity: 1; transform: scale(1); filter: blur(0); }
+  to { opacity: 0; transform: scale(1.1); filter: blur(30px); }
+}
+
+@keyframes buttonBreathe {
+  0%, 100% { transform: scale(1.02); box-shadow: 0 20px 60px rgba(168, 213, 186, 0.45); }
+  50% { transform: scale(1.05); box-shadow: 0 30px 80px rgba(168, 213, 186, 0.65); }
+}
+
+@keyframes bubbleFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+@keyframes stageEnter {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulseWave {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes textBreathe {
+  0%, 100% { opacity: 0.4; transform: scale(0.98); }
+  50% { opacity: 0.8; transform: scale(1); }
+}
+
+@keyframes sweep {
+  from { left: -100%; }
+  to { left: 100%; }
 }
 
 @keyframes rotate {
@@ -102,35 +497,18 @@
   to { transform: rotate(360deg); }
 }
 
-.fortune-result {
-  text-align: center;
-  animation: fadeIn 0.8s ease-out;
-
-  .level {
-    font-size: 64px;
-    font-weight: 900;
-    color: #d32f2f;
-    margin-bottom: 30px;
-    display: block;
-  }
-  .poem {
-    font-size: 36px;
-    line-height: 1.6;
-    color: #5d4037;
-    margin-bottom: 40px;
-    font-style: italic;
-    display: block;
-  }
-  .advice {
-    font-size: 28px;
-    color: #795548;
-    background: rgba(255, 255, 255, 0.5);
-    padding: 20px 30px;
-    border-radius: 20px;
-  }
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes rippleExpand {
+  0% { transform: scale(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes fadeOutBlur {
+  from { opacity: 1; transform: scale(1); filter: blur(0); }
+  to { opacity: 0; transform: scale(0.95); filter: blur(40px); }
 }

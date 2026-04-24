@@ -1,28 +1,50 @@
 .fortune-card-container {
+  width: 100%;
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  padding: 40px 20px;
+  padding: 40px 0;
+  animation: posterAppear 1s cubic-bezier(0.22, 1, 0.36, 1);
 
-  .share-canvas {
-    width: 360px;
-    height: 540px;
-    background: transparent;
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  .soul-canvas {
+    width: 600px;
+    height: 1000px;
+    background: #fff;
+    border-radius: 40px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
   }
 
-  .save-btn {
-    width: 240px;
-    height: 50px;
+  .action-bar {
+    margin-top: 60px;
+    width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background: #5d4037;
-    color: #fff;
-    border-radius: 25px;
-    font-size: 30px;
-    box-shadow: 0 10px 25px rgba(93, 64, 55, 0.25);
+
+    .save-poster-btn {
+      width: 80%;
+      height: 100px;
+      background: #a8d5ba;
+      color: #fff;
+      border-radius: 50px;
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 15px 35px rgba(168, 213, 186, 0.3);
+      transition: all 0.3s;
+
+      &:active {
+        transform: scale(0.96);
+        box-shadow: 0 5px 15px rgba(168, 213, 186, 0.2);
+      }
+    }
   }
+}
+
+@keyframes fadeInZen {
+  from { opacity: 0; transform: scale(0.9) translateY(40px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

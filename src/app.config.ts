@@ -10,6 +10,7 @@ export default defineAppConfig({
         'pages/trace/index',
         'pages/guide/index',
         'pages/about/index',
+        'pages/config/index',
       ]
     }
   ],

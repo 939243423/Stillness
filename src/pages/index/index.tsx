@@ -1,109 +1,249 @@
-import { useState, useCallback } from 'react';
-import Taro, { useDidShow } from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
+import { useState, useCallback, useEffect } from 'react';
+import Taro from '@tarojs/taro';
+import { View, Text, Textarea, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
-import { ZenMuyu } from '../../components/ZenMuyu';
+import { ResonanceRhythm } from '../../components/ResonanceRhythm';
 import { WishBottle } from '../../components/WishBottle';
-import { FortuneCard } from '../../components/FortuneCard';
+import { ResonanceTip } from '../../components/ResonanceTip';
 import { useRewardAd } from '../../hooks/useRewardAd';
-import { generateZenSeed, drawFortune } from '../../services/zenService';
+import { getResonanceResponse } from '../../services/aiService';
 import { useTabActive } from '../../hooks/useTabActive';
 import './index.scss';
 
 export default function Index() {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [showTools, setShowTools] = useState(false);
   const [mode, setMode] = useState<'muyu' | 'bottle'>('muyu');
-  const { showAd } = useRewardAd();
+  const [thought, setThought] = useState('');
+  
+  // Resonance State
+  const [isResonanceActive, setIsResonanceActive] = useState(false);
+  const [roundIndex, setRoundIndex] = useState(0);
+  const [chatHistory, setChatHistory] = useState<{role: 'user' | 'assistant', content: string}[]>([]);
+  const [visualState, setVisualState] = useState({ color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 });
+  const [scrollInto, setScrollInto] = useState('');
+  const [isButtonActive, setIsButtonActive] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isClosing, setIsClosing] = useState(false); 
+  const [showTip, setShowTip] = useState(false); 
 
+  // 按钮点亮防抖逻辑
+  useEffect(() => {
+    if (!thought.trim()) {
+      setIsButtonActive(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setIsButtonActive(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [thought]);
+
+  const { showAd } = useRewardAd();
   useTabActive(0);
 
-  useDidShow(() => {
-    // TabBar 状态由组件内部 useDidShow 自感知同步，此处无需手动设置
-  });
+  // 自动滚动到底部
+  useEffect(() => {
+    if (chatHistory.length > 0) {
+      setTimeout(() => {
+        setScrollInto(`msg-${chatHistory.length - 1}`);
+      }, 100);
+    }
+  }, [chatHistory]);
 
-  const handleDraw = useCallback(async () => {
-    const immediate = await showAd();
-    if (!immediate) return;
-    executeDraw();
-  }, [showAd]);
+  const startResonance = useCallback(async () => {
+    if (!thought.trim()) {
+      Taro.vibrateShort({ type: 'medium' });
+      setShowTip(true);
+      return;
+    }
+    
+    const canStart = await showAd();
+    if (!canStart) return;
 
-  const executeDraw = useCallback(async () => {
+    // 开始“深潜”转场
+    setIsTransitioning(true);
+    Taro.vibrateShort({ type: 'heavy' });
+
     setLoading(true);
-    setResult(null);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    const seed = await generateZenSeed();
-    const fortune = drawFortune(seed);
-    setResult(fortune);
-    setLoading(false);
+    const initialUserMsg = { role: 'user' as const, content: thought };
+    setChatHistory([initialUserMsg]);
+    setThought('');
 
-    // 增加累计签文并保存历史
-    const count = Taro.getStorageSync('fortune_count') || 0;
-    Taro.setStorageSync('fortune_count', count + 1);
+    // 并行请求 AI
+    const aiPromise = getResonanceResponse([initialUserMsg]);
 
-    const history = Taro.getStorageSync('zen_history') || [];
-    const newRecord = {
-      ...fortune,
-      id: Date.now(),
-      date: new Date().toLocaleDateString(),
-      time: new Date().toLocaleTimeString().slice(0, 5)
-    };
-    // 限制保存最近 50 条
-    Taro.setStorageSync('zen_history', [newRecord, ...history].slice(0, 50));
-  }, []);
+    setTimeout(async () => {
+      setIsResonanceActive(true);
+      setIsTransitioning(false);
+      setRoundIndex(1);
+      
+      try {
+        const res = await aiPromise;
+        setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
+        setVisualState(res.visualTarget);
+      } catch (e) {
+        Taro.showToast({ title: '频率连接不稳', icon: 'none' });
+      } finally {
+        setLoading(false);
+      }
+    }, 800);
+  }, [thought, showAd]);
+
+  const handleNextRound = useCallback(async () => {
+    if (!thought.trim() || loading) return;
+
+    setLoading(true);
+    const userMsg = { role: 'user' as const, content: thought };
+    const updatedHistory = [...chatHistory, userMsg];
+    setChatHistory(updatedHistory);
+    setThought('');
+
+    try {
+      const res = await getResonanceResponse(updatedHistory);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
+      setVisualState(res.visualTarget);
+      setRoundIndex(prev => prev + 1);
+    } catch (e) {
+      Taro.showToast({ title: '感应中断', icon: 'none' });
+    } finally {
+      setLoading(false);
+    }
+  }, [chatHistory, thought, loading]);
+
+  const [quote] = useState(() => {
+    const quotes = ['每个当下，都是新的开始。', '听，心跳的节奏。', '呼吸间，世界很静。', '温柔地对待自己。'];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  });
 
   return (
     <View className='index'>
-      <ZenBackground />
+      {/* 动态背景 */}
+      <ZenBackground 
+        color={visualState.color} 
+        intensity={visualState.intensity} 
+        speed={visualState.flowSpeed} 
+      />
 
-      {/* 仅在非加载/结果状态显示首页主内容 */}
-      {!loading && !result && (
-        <View className='index__content'>
-          <View className='index__title-box'>
-            <Text className='title'>签签有你</Text>
-            <Text className='subtitle'>极致优雅 · 治愈身心</Text>
+      {/* 首页阶段 */}
+      {!isResonanceActive && (
+        <View className={`index__main ${showTools ? 'pushed' : ''} ${isTransitioning ? 'exiting' : ''}`}>
+           <View className={`index__header ${isTransitioning ? 'mini' : ''}`}>
+              <Text className='quote-text'>{quote}</Text>
+           </View>
+          <View className={`diary-input-card ${isTransitioning ? 'exiting' : ''}`}>
+            <View className='card-header'>
+               <Text className='greeting'>你好，最近心情如何？</Text>
+            </View>
+            <Textarea 
+              className='thought-input'
+              placeholder='写下第一缕思绪，开启深度共鸣之旅...'
+              value={thought}
+              onInput={(e) => setThought(e.detail.value)}
+              maxlength={100}
+              autoHeight
+            />
+          </View>
+          <View className='resonance-action'>
+            <View className={`resonance-draw-btn ${isButtonActive ? 'active' : ''}`} onClick={startResonance}>
+              即时共鸣
+              <View className='btn-effect' />
+            </View>
+          </View>
+        </View>
+      )}
+
+      {/* 转场动效 */}
+      {isTransitioning && <View className='ripple-overlay' />}
+
+      {/* 对话阶段 */}
+      {isResonanceActive && (
+        <View className={`resonance-stage ${isClosing ? 'closing' : ''}`}>
+          <View className='resonance-header'>
+            <View className='depth-indicator'>
+              <View className='depth-dot' style={{ opacity: Math.min(roundIndex / 10, 1) }} />
+              <Text className='depth-text'>灵魂共鸣中</Text>
+            </View>
+            <Text className='close-resonance' onClick={() => {
+              setIsClosing(true);
+              setTimeout(() => {
+                setIsResonanceActive(false);
+                setIsClosing(false);
+                setChatHistory([]);
+                setRoundIndex(0);
+                setVisualState({ color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 });
+              }, 600);
+            }}>结束共鸣</Text>
           </View>
 
-          {/* 模式切换器 */}
-          {!result && !loading && (
-            <View className='zen-tabs'>
-              <View className={`tab ${mode === 'muyu' ? 'active' : ''}`} onClick={() => setMode('muyu')}>禅听木鱼</View>
-              <View className={`tab ${mode === 'bottle' ? 'active' : ''}`} onClick={() => setMode('bottle')}>流光许愿</View>
+          <ScrollView 
+            className='chat-scroll' 
+            scrollY 
+            scrollWithAnimation 
+            scrollIntoView={scrollInto}
+            enhanced
+            showScrollbar={false}
+          >
+            <View className='chat-list'>
+              {chatHistory.map((item, idx) => (
+                <View 
+                  key={idx} 
+                  id={`msg-${idx}`}
+                  className={`chat-bubble ${item.role}`}
+                >
+                  <Text className='bubble-text'>{item.content}</Text>
+                </View>
+              ))}
+              {loading && (
+                <View className='chat-bubble assistant loading'>
+                    <View className='loading-aura'>
+                      <Text className='aura-text'>感应中</Text>
+                      <View className='aura-dot' />
+                    </View>
+                </View>
+              )}
             </View>
-          )}
+          </ScrollView>
 
-          {/* 交互核心区 */}
-          {!result && !loading && (
-            <View className='content-center'>
-              {mode === 'muyu' ? <ZenMuyu /> : <WishBottle />}
+          <View className='user-input-tray'>
+            <View className='input-wrapper'>
+              <Textarea 
+                className='input-area'
+                placeholder='在此刻，分享你的感悟...'
+                value={thought}
+                onInput={(e) => setThought(e.detail.value)}
+                confirmType='send'
+                onConfirm={handleNextRound}
+                autoHeight
+                fixed
+              />
+              <View className={`send-trigger ${thought.trim() && !loading ? 'active' : ''}`} onClick={handleNextRound}>
+                <View className='send-icon' />
+              </View>
             </View>
-          )}
-
-          {/* 开启按钮 */}
-          {!loading && !result && (
-            <View className='zen-draw-btn' onClick={handleDraw}>
-              开启今日签文
-            </View>
-          )}
+          </View>
         </View>
       )}
 
-      {/* 抽签结果与分享 - 移至最外层以确保固定定位不受父容器影响 */}
-      {(loading || result) && (
-        <View className='result-modal'>
-          {loading ? (
-            <View className='loading-state'>
-              <View className='loading-spinner' />
-              <Text>正在为您感知禅意...</Text>
-            </View>
-          ) : (
-            <View className='result-view'>
-              <FortuneCard data={result} />
-              <View className='btn-back' onClick={() => setResult(null)}>返回修行</View>
-            </View>
-          )}
+      {/* 底部功能盘 */}
+      {!isResonanceActive && (
+        <View className={`tools-tray ${showTools ? 'expanded' : ''}`}>
+          <View className='tray-handle' onClick={() => setShowTools(!showTools)}>
+            <View className='handle-bar' />
+            <Text className='handle-text'>{showTools ? '回到共鸣' : '共鸣空间表'}</Text>
+          </View>
+          <View className='tools-content'>
+             <View className='tools-tabs'>
+                <View className={`tool-tab ${mode === 'muyu' ? 'active' : ''}`} onClick={() => setMode('muyu')}>解压律动</View>
+                <View className={`tool-tab ${mode === 'bottle' ? 'active' : ''}`} onClick={() => setMode('bottle')}>情绪瓶子</View>
+             </View>
+             <View className='tool-display'>
+                {mode === 'muyu' ? <ResonanceRhythm /> : <WishBottle />}
+             </View>
+          </View>
         </View>
       )}
+      <ResonanceTip show={showTip} onClose={() => setShowTip(false)} />
     </View>
   );
 }

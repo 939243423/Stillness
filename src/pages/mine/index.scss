@@ -9,15 +9,16 @@
   .mine-content {
     position: relative;
     z-index: 10;
-    flex: 1;
-    overflow-y: auto;
-    
-    /* 隐藏滚动条 */
+    padding-bottom: 200px;
+
     &::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
-      color: transparent;
+      display: block !important;
+      width: 6px !important;
+      background: rgba(168, 213, 186, 0.05);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(168, 213, 186, 0.3) !important;
+      border-radius: 10px;
     }
   }
 
@@ -25,127 +26,197 @@
     padding: 100px 40px 60px;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
 
-    .avatar-box {
-      width: 120px;
-      height: 120px;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 50%;
-      border: 2px solid #e2d1c3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 40px;
-      color: #5d4037;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    .avatar-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+
+      .avatar-glow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #a8d5ba;
+        border-radius: 50%;
+        filter: blur(30px);
+        opacity: 0.25;
+        animation: avatarPulse 4s infinite ease-in-out;
+      }
+
+      .avatar-placeholder {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 32px;
+        color: #a8d5ba;
+        font-weight: 300;
+        letter-spacing: 2px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      }
     }
 
     .info-box {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      align-items: center;
+      gap: 8px;
 
       .nickname {
         font-size: 36px;
-        font-weight: bold;
-        color: #3e2723;
+        font-weight: 500;
+        color: #2c3e50;
+        letter-spacing: 2px;
       }
       .status {
-        font-size: 24px;
-        color: #8d6e63;
-        opacity: 0.8;
+        font-size: 20px;
+        color: #95a5a6;
+        font-weight: 300;
       }
     }
   }
 
   .section-title {
-    padding: 0 40px 20px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #5d4037;
-    letter-spacing: 2px;
+    padding: 0 60px 20px;
+    font-size: 20px;
+    font-weight: 400;
+    color: #bdc3c7;
+    letter-spacing: 8px;
   }
 
-  .achievement-scroll {
-    padding: 0 20px 40px;
-    white-space: nowrap;
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 40px 40px;
 
-    .achievement-card {
-      display: inline-flex;
+    .stat-card {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 30px 0;
+      border-radius: 30px;
+      display: flex;
       flex-direction: column;
       align-items: center;
-      width: 200px;
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      margin: 0 20px;
-      padding: 30px 0;
-      border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 10px 20px rgba(168, 213, 186, 0.08);
 
-      .icon {
-        font-size: 44px;
-        margin-bottom: 10px;
+      .card-icon {
+        font-size: 36px;
+        margin-bottom: 16px;
+        filter: drop-shadow(0 4px 10px rgba(168, 213, 186, 0.3));
       }
-      .value {
+      .card-value {
         font-size: 32px;
-        font-weight: bold;
-        color: #3e2723;
-        margin-bottom: 4px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 8px;
       }
-      .label {
+      .card-label {
         font-size: 20px;
-        color: #8d6e63;
+        color: #bdc3c7;
+        letter-spacing: 2px;
       }
     }
   }
 
-  .menu-list {
-    padding: 20px 40px;
+  .menu-section {
+    padding: 0 40px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 16px;
 
     .menu-item {
       display: flex;
       align-items: center;
-      background: rgba(255, 255, 255, 0.5);
-      padding: 30px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 32px 40px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
-      .menu-icon {
-        font-size: 36px;
-        margin-right: 20px;
+      &:active {
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0.97);
       }
-      .menu-title {
-        flex: 1;
-        font-size: 28px;
-        color: #3e2723;
+
+      .menu-left {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .menu-icon {
+          font-size: 38px;
+          filter: grayscale(1) opacity(0.5);
+        }
+        .menu-title {
+          font-size: 30px;
+          color: #34495e;
+          font-weight: 400;
+          letter-spacing: 2px;
+        }
       }
-      .menu-arrow {
-        width: 12px;
-        height: 12px;
-        border-top: 2px solid #bdbdbd;
-        border-right: 2px solid #bdbdbd;
+
+      .menu-arrow-icon {
+        width: 14px;
+        height: 14px;
+        border-top: 2.5px solid #bdc3c7;
+        border-right: 2.5px solid #bdc3c7;
         transform: rotate(45deg);
+        opacity: 0.6;
       }
     }
   }
 
-  .footer {
-    padding: 100px 0 160px;
+  .page-footer {
+    padding: 120px 40px 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    color: #bdbdbd;
-    font-size: 20px;
-    letter-spacing: 1px;
+    gap: 40px;
 
-    .ver {
-      opacity: 0.6;
+    .motto {
+      font-size: 20px;
+      color: #95a5a6;
+      letter-spacing: 4px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      .brand-name {
+        font-size: 18px;
+        color: #bdc3c7;
+        letter-spacing: 10px;
+        font-weight: 300;
+      }
+      .ver {
+        font-size: 14px;
+        color: #ecf0f1;
+        letter-spacing: 1px;
+      }
     }
   }
+}
+
+@keyframes avatarPulse {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50% { transform: scale(1.2); opacity: 0.25; }
 }

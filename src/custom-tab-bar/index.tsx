@@ -15,7 +15,7 @@ export default function CustomTabBar() {
     },
     {
       pagePath: '/pages/mine/index',
-      text: '修行',
+      text: '共鸣',
       iconPath: '/assets/images/tab-mine.png',
       selectedIconPath: '/assets/images/tab-mine-active.png'
     }

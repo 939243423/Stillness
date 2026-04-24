@@ -7,91 +7,101 @@ import './index.scss';
 
 export default function Mine() {
   const [stats, setStats] = useState({
-    muyu: 0,
-    fortune: 0,
-    wish: 0
+    resonance: 0,
+    insight: 0,
+    calm: 0
   });
 
   useTabActive(1);
 
   useDidShow(() => {
-    // 获取统计数据 (从 Storage 获取)
-    const muyuCount = Taro.getStorageSync('muyu_count') || 0;
-    const fortuneCount = Taro.getStorageSync('fortune_count') || 0;
-    const wishCount = Taro.getStorageSync('wish_count') || 0;
-    setStats({ muyu: muyuCount, fortune: fortuneCount, wish: wishCount });
+    // 从存储中获取最新的数据
+    const resonanceCount = Taro.getStorageSync('resonance_count') || 0;
+    const history = Taro.getStorageSync('resonance_history') || [];
+    setStats({ 
+      resonance: resonanceCount, 
+      insight: history.length,
+      calm: Math.floor(resonanceCount * 1.5)
+    });
   });
 
-  const achievements = [
-    { label: '累计功德', value: stats.muyu, icon: '🙏' },
-    { label: '已解签文', value: stats.fortune, icon: '📜' },
-    { label: '流光许愿', value: stats.wish, icon: '✨' },
+  const soulInsights = [
+    { label: '共鸣次数', value: stats.resonance, icon: '🫧' },
+    { label: '灵魂印记', value: stats.insight, icon: '✨' },
+    { label: '平静指数', value: stats.calm, icon: '🌿' },
   ];
 
   const handleItemClick = (title: string) => {
     const routes: Record<string, string> = {
-      '我的修行轨迹': '/packageMine/pages/trace/index',
-      '内心修复指南': '/packageMine/pages/guide/index',
-      '关于签签有你': '/packageMine/pages/about/index'
+      '我的共鸣历史': '/packageMine/pages/trace/index',
+      '共鸣空间配置': '/packageMine/pages/config/index',
+      '灵魂感应手册': '/packageMine/pages/guide/index',
+      '关于灵魂共鸣': '/packageMine/pages/about/index'
     };
     if (routes[title]) {
       Taro.navigateTo({ url: routes[title] });
     } else {
-      Taro.showToast({ title: '即将开放', icon: 'none' });
+      Taro.showToast({ title: '深度链接校准中', icon: 'none' });
     }
   };
 
   const menuItems = [
-    { title: '我的修行轨迹', icon: '📍' },
-    { title: '禅意白名单', icon: '🛡️' },
-    { title: '内心修复指南', icon: '🛠️' },
-    { title: '关于签签有你', icon: '🍵' },
+    { title: '我的共鸣历史', icon: '⌛' },
+    { title: '共鸣空间配置', icon: '⚙️' },
+    { title: '灵魂感应手册', icon: '📖' },
+    { title: '关于灵魂共鸣', icon: '🕊️' },
   ];
 
   return (
     <View className='mine-page'>
-      <ZenBackground />
+      <ZenBackground color='#FDFCFB' intensity={0.2} speed={0.1} />
       
-      <ScrollView className='mine-content' scrollY>
-        {/* 用户信息卡片 */}
+      <ScrollView className='mine-content' scrollY showScrollbar={true} enhanced>
+        {/* 用户信息卡片 (高阶极简) */}
         <View className='user-card'>
-          <View className='avatar-box'>
-            <View className='avatar-placeholder'>
-              <Text>禅</Text>
-            </View>
+          <View className='avatar-container'>
+             <View className='avatar-glow' />
+             <View className='avatar-placeholder'>
+                <Text>Soul</Text>
+             </View>
           </View>
           <View className='info-box'>
-            <Text className='nickname'>静心修行者</Text>
-            <Text className='status'>已步入修行第 1 天</Text>
+            <Text className='nickname'>灵魂旅行者</Text>
+            <Text className='status'>已与自我共鸣 {stats.resonance} 次</Text>
           </View>
         </View>
 
-        {/* 成就成就区 */}
-        <View className='section-title'>成就盘点</View>
-        <ScrollView className='achievement-scroll' scrollX enableFlex>
-          {achievements.map((item, idx) => (
-            <View key={idx} className='achievement-card'>
-              <Text className='icon'>{item.icon}</Text>
-              <Text className='value'>{item.value}</Text>
-              <Text className='label'>{item.label}</Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        {/* 功能菜单 */}
-        <View className='menu-list'>
-          {menuItems.map((item, idx) => (
-            <View key={idx} className='menu-item' onClick={() => handleItemClick(item.title)}>
-              <Text className='menu-icon'>{item.icon}</Text>
-              <Text className='menu-title'>{item.title}</Text>
-              <View className='menu-arrow' />
+        {/* 灵魂数据统计 */}
+        <View className='section-title'>灵魂印记</View>
+        <View className='stats-grid'>
+          {soulInsights.map((item, idx) => (
+            <View key={idx} className='stat-card'>
+              <View className='card-icon'>{item.icon}</View>
+              <Text className='card-value'>{item.value}</Text>
+              <Text className='card-label'>{item.label}</Text>
             </View>
           ))}
         </View>
 
-        <View className='footer'>
-          <Text>一花一世界，一叶一菩提</Text>
-          <Text className='ver'>v2.0.0 Pure Zen</Text>
+        {/* 交互菜单 */}
+        <View className='menu-section'>
+          {menuItems.map((item, idx) => (
+            <View key={idx} className='menu-item' onClick={() => handleItemClick(item.title)}>
+              <View className='menu-left'>
+                <Text className='menu-icon'>{item.icon}</Text>
+                <Text className='menu-title'>{item.title}</Text>
+              </View>
+              <View className='menu-arrow-icon' />
+            </View>
+          ))}
+        </View>
+
+        <View className='page-footer'>
+          <Text className='motto'>万物皆有裂痕，那是光照进来的地方</Text>
+          <View className='brand-info'>
+            <Text className='brand-name'>SOUL RESONANCE</Text>
+            <Text className='ver'>v3.0.0 Premium Flow</Text>
+          </View>
         </View>
       </ScrollView>
     </View>

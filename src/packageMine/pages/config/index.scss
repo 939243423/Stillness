@@ -1,0 +1,193 @@
+.config-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: #fdfcfb;
+  display: flex;
+  flex-direction: column;
+
+  .config-header {
+    padding: 120px 40px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .title {
+      font-size: 44px;
+      font-weight: 500;
+      color: #2c3e50;
+      letter-spacing: 4px;
+    }
+    .subtitle {
+      font-size: 24px;
+      color: #b2bec3;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+  }
+
+  .config-content {
+    flex: 1;
+    padding: 0 40px;
+
+    .config-section {
+      margin-bottom: 80px;
+
+      .section-header {
+        margin-bottom: 40px;
+        .section-title {
+          font-size: 30px;
+          color: #2c3e50;
+          font-weight: 500;
+          letter-spacing: 2px;
+          display: block;
+          margin-bottom: 8px;
+        }
+        .section-desc {
+          font-size: 22px;
+          color: #bdc3c7;
+        }
+      }
+
+      .archetype-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+
+        .archetype-card {
+          position: relative;
+          background: rgba(255, 255, 255, 0.4);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          padding: 40px 30px;
+          border-radius: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          overflow: hidden;
+
+          &.active {
+            background: rgba(168, 213, 186, 0.15);
+            border-color: rgba(168, 213, 186, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(168, 213, 186, 0.1);
+
+            .card-icon { transform: scale(1.1); filter: drop-shadow(0 10px 20px rgba(168, 213, 186, 0.4)); }
+            .card-name { color: #2c3e50; }
+          }
+
+          .card-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(168, 213, 186, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.6s;
+          }
+
+          &:active .card-glow { opacity: 1; }
+
+          .card-icon {
+            font-size: 56px;
+            margin-bottom: 24px;
+            transition: transform 0.4s;
+          }
+          .card-name {
+            font-size: 28px;
+            font-weight: 500;
+            color: #34495e;
+            margin-bottom: 12px;
+          }
+          .card-desc {
+            font-size: 20px;
+            color: #95a5a6;
+            line-height: 1.4;
+          }
+
+          .active-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            background: #a8d5ba;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(168, 213, 186, 0.8);
+          }
+        }
+      }
+
+      .tone-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .tone-item {
+          background: rgba(255, 255, 255, 0.35);
+          backdrop-filter: blur(15px);
+          padding: 40px;
+          border-radius: 35px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          transition: all 0.3s;
+
+          &.active {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(168, 213, 186, 0.3);
+
+            .tone-radio {
+              background: #a8d5ba;
+              border-color: #a8d5ba;
+              .radio-inner { transform: scale(1); opacity: 1; }
+            }
+          }
+
+          .tone-label {
+            font-size: 28px;
+            color: #34495e;
+            letter-spacing: 2px;
+          }
+
+          .tone-radio {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #bdc3c7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+
+            .radio-inner {
+              width: 14px;
+              height: 14px;
+              background: #fff;
+              border-radius: 50%;
+              transform: scale(0);
+              opacity: 0;
+              transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+          }
+        }
+      }
+    }
+
+    .config-footer {
+      padding: 40px 0 120px;
+      text-align: center;
+      .footer-hint {
+        font-size: 20px;
+        color: #bdc3c7;
+        letter-spacing: 4px;
+        font-weight: 300;
+      }
+    }
+  }
+}

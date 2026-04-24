@@ -7,8 +7,8 @@ import './index.scss';
 interface HistoryRecord {
   id: number;
   level: string;
-  poem: string;
-  advice: string;
+  echo: string;
+  insight: string;
   seal?: string;
   date: string;
   time: string;
@@ -18,7 +18,7 @@ export default function Trace() {
   const [history, setHistory] = useState<HistoryRecord[]>([]);
 
   useDidShow(() => {
-    const data = Taro.getStorageSync('zen_history') || [];
+    const data = Taro.getStorageSync('resonance_history') || [];
     setHistory(data);
   });
 
@@ -27,32 +27,44 @@ export default function Trace() {
       <ZenBackground />
       
       <View className='trace-header'>
-        <Text className='title'>修行轨迹</Text>
-        <Text className='subtitle'>记录每一次与内心的对话</Text>
+        <Text className='title'>共鸣印记</Text>
+        <Text className='subtitle'>记录每一次灵魂回响</Text>
       </View>
 
-      <ScrollView className='trace-list' scrollY>
+      <ScrollView className='trace-list' scrollY showScrollbar={false} enhanced>
         {history.length > 0 ? (
           history.map((item) => (
             <View key={item.id} className='trace-item'>
-              <View className='item-time'>
-                <Text className='date'>{item.date}</Text>
-                <Text className='time'>{item.time}</Text>
-              </View>
               <View className='item-card'>
+                <View className='item-time-tag'>
+                  <Text className='date'>{item.date}</Text>
+                  <Text className='time'>{item.time}</Text>
+                </View>
                 <View className='card-header'>
-                  <Text className='level'>{item.level}</Text>
+                  <Text className='level'>{item.level || '深度共鸣'}</Text>
                   {item.seal && <Text className='seal'>{item.seal}</Text>}
                 </View>
-                <Text className='poem'>{item.poem}</Text>
-                <Text className='advice'>{item.advice.split('；')[0]}</Text>
+                <Text className='poem'>{item.echo}</Text>
+                <Text className='advice'>{item.insight}</Text>
               </View>
             </View>
           ))
         ) : (
           <View className='empty-state'>
-            <Text className='icon'>🍵</Text>
-            <Text>尚无修行记录，去抽一张签吧</Text>
+            <View className='empty-aura' />
+            <Text className='icon'>✨</Text>
+            <View className='empty-info'>
+              <Text className='empty-title'>尚无共鸣印记</Text>
+              <Text className='empty-subtitle'>试着随缘播下一粒思绪的种子...</Text>
+            </View>
+            
+            <View className='seed-grid'>
+              {['我有话想对自己说...', '分享此刻的云淡风轻', '记录那抹突如其来的感伤', '最近遇到了一个有趣的人'].map((seed, i) => (
+                <View key={i} className='seed-item' onClick={() => Taro.switchTab({ url: '/pages/index/index' })}>
+                  <Text>{seed}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         )}
         <View className='list-footer'>到底了 · 万物静观皆自得</View>

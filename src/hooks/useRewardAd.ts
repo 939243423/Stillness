@@ -75,8 +75,7 @@ export const useRewardAd = (adUnitId: string = 'YOUR_AD_UNIT_ID') => {
       setLoading(false);
       return false; // 等待 onClose 回调
     } catch (err) {
-      // 错误码 1002, 1004 等通常与环境或 ID 有关，静默跳过以保证体验
-      Taro.showToast({ title: '禅境感知中...', icon: 'loading', duration: 800 });
+      Taro.showToast({ title: '共鸣感应中...', icon: 'loading', duration: 800 });
       setIsEnded(true);
       setLoading(false);
       return true;
