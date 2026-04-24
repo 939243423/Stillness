@@ -224,7 +224,7 @@ export default function Index() {
                 onConfirm={handleNextRound}
                 autoHeight
                 fixed
-                cursorSpacing={40}
+                cursorSpacing={25}
                 adjustPosition={true}
               />
               <View className={`send-trigger ${thought.trim() && !loading ? 'active' : ''}`} onClick={handleNextRound}>
