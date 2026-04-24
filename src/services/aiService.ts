@@ -38,7 +38,7 @@ export const getResonanceResponse = async (messages: { role: 'user' | 'assistant
     任务：与用户开启极简、空灵且具启发性的深度对话。
     按 JSON 回复：
     {
-      "text": "你的回应，40字以内",
+      "text": "你的回应，100字以内",
       "visualTarget": {"color": "hex", "intensity": 0-1, "flowSpeed": 0-1},
       "roundScore": 0-100,
       "isFinal": false

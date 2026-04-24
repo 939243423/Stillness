@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import Taro from '@tarojs/taro';
-import { View, Image, Text } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import './index.scss';
 
 export default function CustomTabBar() {
@@ -9,15 +9,15 @@ export default function CustomTabBar() {
   const list = [
     {
       pagePath: '/pages/index/index',
-      text: '首页',
-      iconPath: '/assets/images/tab-home.png',
-      selectedIconPath: '/assets/images/tab-home-active.png'
+      text: '共鸣',
+      iconPath: '../assets/images/tab-resonance.png',
+      selectedIconPath: '../assets/images/tab-resonance-active.png'
     },
     {
       pagePath: '/pages/mine/index',
-      text: '共鸣',
-      iconPath: '/assets/images/tab-mine.png',
-      selectedIconPath: '/assets/images/tab-mine-active.png'
+      text: '我的',
+      iconPath: '../assets/images/tab-mine.png',
+      selectedIconPath: '../assets/images/tab-mine-active.png'
     }
   ];
 
@@ -55,10 +55,7 @@ export default function CustomTabBar() {
           className={`tab-item ${selected === index ? 'active' : ''}`}
           onClick={() => switchTab(index, item.pagePath)}
         >
-          <Image 
-            className='tab-icon'
-            src={selected === index ? item.selectedIconPath : item.iconPath} 
-          />
+          <View className={`tab-icon-mask ${index === 0 ? 'resonance' : 'mine'}`} />
           <Text className='tab-text'>{item.text}</Text>
         </View>
       ))}

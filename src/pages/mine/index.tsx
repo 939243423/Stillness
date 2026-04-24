@@ -26,9 +26,9 @@ export default function Mine() {
   });
 
   const soulInsights = [
-    { label: '共鸣次数', value: stats.resonance, icon: '🫧' },
-    { label: '灵魂印记', value: stats.insight, icon: '✨' },
-    { label: '平静指数', value: stats.calm, icon: '🌿' },
+    { label: '共鸣次数', value: stats.resonance, iconClass: 'icon-resonance' },
+    { label: '灵魂印记', value: stats.insight, iconClass: 'icon-insight' },
+    { label: '平静指数', value: stats.calm, iconClass: 'icon-calm' },
   ];
 
   const handleItemClick = (title: string) => {
@@ -46,17 +46,17 @@ export default function Mine() {
   };
 
   const menuItems = [
-    { title: '我的共鸣历史', icon: '⌛' },
-    { title: '共鸣空间配置', icon: '⚙️' },
-    { title: '灵魂感应手册', icon: '📖' },
-    { title: '关于灵魂共鸣', icon: '🕊️' },
+    { title: '我的共鸣历史', iconClass: 'icon-history' },
+    { title: '共鸣空间配置', iconClass: 'icon-config' },
+    { title: '灵魂感应手册', iconClass: 'icon-guide' },
+    { title: '关于灵魂共鸣', iconClass: 'icon-about' },
   ];
 
   return (
     <View className='mine-page'>
       <ZenBackground color='#FDFCFB' intensity={0.2} speed={0.1} />
       
-      <ScrollView className='mine-content' scrollY showScrollbar={true} enhanced>
+      <ScrollView className='mine-content' scrollY showScrollbar={false} enhanced>
         {/* 用户信息卡片 (高阶极简) */}
         <View className='user-card'>
           <View className='avatar-container'>
@@ -76,7 +76,7 @@ export default function Mine() {
         <View className='stats-grid'>
           {soulInsights.map((item, idx) => (
             <View key={idx} className='stat-card'>
-              <View className='card-icon'>{item.icon}</View>
+              <View className={`card-icon ${item.iconClass}`} />
               <Text className='card-value'>{item.value}</Text>
               <Text className='card-label'>{item.label}</Text>
             </View>
@@ -88,7 +88,7 @@ export default function Mine() {
           {menuItems.map((item, idx) => (
             <View key={idx} className='menu-item' onClick={() => handleItemClick(item.title)}>
               <View className='menu-left'>
-                <Text className='menu-icon'>{item.icon}</Text>
+                <View className={`menu-icon ${item.iconClass}`} />
                 <Text className='menu-title'>{item.title}</Text>
               </View>
               <View className='menu-arrow-icon' />

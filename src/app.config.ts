@@ -22,9 +22,9 @@ export default defineAppConfig({
     list: [
       {
         pagePath: 'pages/index/index',
-        text: '首页',
-        iconPath: './assets/images/tab-home.png',
-        selectedIconPath: './assets/images/tab-home-active.png',
+        text: '共鸣',
+        iconPath: './assets/images/tab-resonance.png',
+        selectedIconPath: './assets/images/tab-resonance-active.png',
       },
       {
         pagePath: 'pages/mine/index',

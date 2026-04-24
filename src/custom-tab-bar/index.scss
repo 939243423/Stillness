@@ -3,14 +3,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100px; /* 适当减小高度提升比例平衡感 */
-  background: hsla(0, 0%, 100%, 0.7);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+  height: 120px;
+  background: transparent; // 完全透明底
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1px solid hsla(0, 0%, 100%, 0.5);
-  box-shadow: 0 -10px 40px hsla(0, 0%, 0%, 0.05); /* 增加微妙的上浮阴影 */
   z-index: 1000;
 
   .tab-item {
@@ -20,42 +16,45 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    padding-top: 15px; /* 确保垂直居中偏上，留出呼吸感 */
+    padding-top: 10px;
 
-    .tab-icon {
-      width: 44px; /* 轻微调整图标尺寸 */
-      height: 44px;
+    .tab-icon-mask {
+      width: 52px;
+      height: 52px;
       margin-bottom: 6px;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      background-color: #bdc3c7; // 默认灰色
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      
+      &.resonance {
+        -webkit-mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5IiBvcGFjaXR5PSIwLjMiLz48L3N2Zz4=") no-repeat center;
+        mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5IiBvcGFjaXR5PSIwLjMiLz48L3N2Zz4=") no-repeat center;
+        mask-size: contain;
+      }
+      
+      &.mine {
+        -webkit-mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+") no-repeat center;
+        mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+") no-repeat center;
+        mask-size: contain;
+      }
     }
 
     .tab-text {
-      font-size: 18px; /* 字体微调更显精致 */
-      color: hsla(16, 18%, 49%, 0.8);
-      transition: all 0.3s;
+      font-size: 20px;
+      color: #bdc3c7;
+      font-weight: 300;
+      letter-spacing: 2px;
     }
 
     &.active {
-      .tab-icon {
-        transform: translateY(-8px);
-        filter: drop-shadow(0 4px 10px hsla(16, 25%, 38%, 0.2));
+      .tab-icon-mask {
+        background-color: #a8d5ba; // 激活色
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: 0 10px 20px rgba(168, 213, 186, 0.2);
       }
       .tab-text {
-        color: hsl(16, 25%, 29%);
+        color: #a8d5ba;
         font-weight: 500;
-        letter-spacing: 1px;
       }
-    }
-
-    .tab-active-dot {
-      position: absolute;
-      bottom: 22px;
-      width: 6px;
-      height: 6px;
-      background: hsl(16, 25%, 29%);
-      border-radius: 50%;
-      box-shadow: 0 4px 12px hsla(16, 25%, 29%, 0.4);
-      animation: dotPop 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
   }
 }

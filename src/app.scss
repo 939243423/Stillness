@@ -8,6 +8,7 @@ page {
 
 view, text, scroll-view, input, textarea, image, button {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::-webkit-scrollbar {

@@ -52,13 +52,29 @@
       }
     }
 
-    .tip-message {
-      font-size: 32px;
-      color: #2c3e50;
-      font-weight: 500;
-      letter-spacing: 2px;
+    .tip-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
       margin-bottom: 60px;
-      text-align: center;
+      padding: 0 20px;
+
+      .tip-title {
+        font-size: 38px;
+        color: #2c3e50;
+        font-weight: 600;
+        letter-spacing: 4px;
+      }
+
+      .tip-message {
+        font-size: 28px;
+        color: #7f8c8d;
+        font-weight: 300;
+        line-height: 1.6;
+        text-align: center;
+        letter-spacing: 1px;
+      }
     }
 
     .tip-action {

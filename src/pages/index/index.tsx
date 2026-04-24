@@ -95,6 +95,11 @@ export default function Index() {
   const handleNextRound = useCallback(async () => {
     if (!thought.trim() || loading) return;
 
+    if (roundIndex >= 30) {
+      Taro.showToast({ title: '本次共鸣已达上限，感谢这份深度的连接。', icon: 'none' });
+      return;
+    }
+
     setLoading(true);
     const userMsg = { role: 'user' as const, content: thought };
     const updatedHistory = [...chatHistory, userMsg];
@@ -111,7 +116,7 @@ export default function Index() {
     } finally {
       setLoading(false);
     }
-  }, [chatHistory, thought, loading]);
+  }, [chatHistory, thought, loading, roundIndex]);
 
   const [quote] = useState(() => {
     const quotes = ['每个当下，都是新的开始。', '听，心跳的节奏。', '呼吸间，世界很静。', '温柔地对待自己。'];

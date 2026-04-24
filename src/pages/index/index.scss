@@ -359,10 +359,10 @@
 
     .user-input-tray {
       position: fixed;
-      bottom: 0;
+      bottom: calc(100px + env(safe-area-inset-bottom));
       left: 0;
       width: 100%;
-      padding: 40px 40px calc(40px + env(safe-area-inset-bottom));
+      padding: 20px 40px;
       background: linear-gradient(0deg, #fdfcfb 70%, transparent);
       z-index: 110;
 
