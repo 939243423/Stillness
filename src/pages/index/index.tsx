@@ -27,7 +27,6 @@ export default function Index() {
   const [scrollInto, setScrollInto] = useState('');
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isClosing, setIsClosing] = useState(false); 
   const [showTip, setShowTip] = useState(false); 
 
   const [systemSettings, setSystemSettings] = useState({
@@ -140,6 +139,34 @@ export default function Index() {
     Taro.showToast({ title: '已停止共鸣感应', icon: 'none' });
   }, []);
 
+  const handleTypewriter = useCallback((fullText: string, onFinish?: () => void) => {
+    let currentText = '';
+    let index = 0;
+    
+    // 增加一个辅助状态来承载当前正在展示的消息
+    setChatHistory(prev => [...prev, { role: 'assistant', content: '' }]);
+
+    const interval = setInterval(() => {
+      currentText += fullText[index];
+      setChatHistory(prev => {
+        const newHistory = [...prev];
+        if (newHistory.length > 0) {
+          newHistory[newHistory.length - 1] = { 
+            ...newHistory[newHistory.length - 1], 
+            content: currentText 
+          };
+        }
+        return newHistory;
+      });
+      
+      index++;
+      if (index >= fullText.length) {
+        clearInterval(interval);
+        if (onFinish) onFinish();
+      }
+    }, 45); // 稍微快一点，保持流畅感
+  }, []);
+
   const startResonance = useCallback(async (overrideThought?: string) => {
     const inputThought = overrideThought || thought;
     if (!inputThought.trim()) {
@@ -172,13 +199,25 @@ export default function Index() {
       
       try {
         const res = await resonancePromise;
-        setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
         setVisualState(res.visualTarget);
+        
+        handleTypewriter(res.text, () => {
+          setLoading(false);
+          if (res.isFinal) {
+             Taro.showModal({
+               title: '感应圆满',
+               content: '目前的共鸣共振已达巅峰，是否现在凝练灵魂印记？',
+               success: (m) => {
+                 if (m.confirm) handleFinish();
+               }
+             });
+          }
+        });
       } catch (e) {
         if (e.errMsg?.includes('abort')) return;
         Taro.showToast({ title: '感感应频率超时或中断', icon: 'none' });
-      } finally {
         setLoading(false);
+      } finally {
         requestTaskRef.current = null;
       }
     }, 800);
@@ -202,14 +241,26 @@ export default function Index() {
       const res = await getResonanceResponse(updatedHistory, (task) => {
         requestTaskRef.current = task;
       });
-      setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
       setVisualState(res.visualTarget);
       setRoundIndex(prev => prev + 1);
+
+      handleTypewriter(res.text, () => {
+        setLoading(false);
+        if (res.isFinal) {
+          Taro.showModal({
+            title: '感应圆满',
+            content: '意识的交流已达深处，是否现在为您生成灵魂画像？',
+            success: (m) => {
+              if (m.confirm) handleFinish();
+            }
+          });
+        }
+      });
     } catch (e) {
       if (e.errMsg?.includes('abort')) return;
       Taro.showToast({ title: '感应超时，请稍后重试', icon: 'none' });
-    } finally {
       setLoading(false);
+    } finally {
       requestTaskRef.current = null;
     }
   }, [chatHistory, thought, loading, roundIndex]);
@@ -323,7 +374,7 @@ export default function Index() {
       {/* 对话阶段 */}
       {isResonanceActive && (
         <View className='resonance-stage'>
-          <View className={`index__resonance ${isClosing ? 'closing' : ''}`}>
+          <View className='index__resonance'>
             <View className='resonance-header-nav'>
                <View className='back-btn' onClick={() => {
                   if (chatHistory.length > 0) {
