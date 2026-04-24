@@ -47,22 +47,19 @@ export const getResonanceResponse = async (
       "isFinal": false
     }`;
 
-  try {
+  const requestModel = async (model: string, timeout: number): Promise<ResonanceResponse> => {
     const task = Taro.request({
       url: BASE_URL,
       method: 'POST',
-      timeout: 15000,
+      timeout,
       header: {
         'Authorization': `Bearer ${SILICON_KEY}`,
         'Content-Type': 'application/json',
       },
       data: {
-        model: 'Pro/MiniMaxAI/MiniMax-M2.5',
+        model,
         messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
+          { role: 'system', content: systemPrompt },
           ...messages
         ],
         response_format: { type: 'json_object' }
@@ -75,25 +72,37 @@ export const getResonanceResponse = async (
     if (response.statusCode === 200) {
       let content = response.data.choices[0].message.content;
       content = content.replace(/```json/g, '').replace(/```/g, '').trim();
-      
-      try {
-        return JSON.parse(content);
-      } catch (e) {
-        console.error('JSON Parse Error:', content);
-        throw e;
-      }
+      return JSON.parse(content);
     } else {
-      console.error('API Error Response:', response.data);
       throw new Error(`API Status ${response.statusCode}`);
     }
+  };
+
+  try {
+    // 优先试用 MiniMax (5s 限制)
+    return await requestModel('Pro/MiniMaxAI/MiniMax-M2.5', 5000);
   } catch (error) {
-    console.error('Therapy API Error:', error);
-    return {
-      text: '感应到你的思绪正在流动。再多分享一点，我一直在听。',
-      visualTarget: { color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 },
-      roundScore: 10,
-      isFinal: false
-    };
+    // 如果是用户主动取消，则不再重试
+    if (error.errMsg?.includes('abort')) {
+      throw error;
+    }
+    
+    console.warn('MiniMax 响应慢或失败，切换至 Kimi...');
+    try {
+      // 备选方案 Kimi (10s 限制)
+      return await requestModel('Pro/moonshotai/Kimi-K2.5', 10000);
+    } catch (fallbackError) {
+      if (fallbackError.errMsg?.includes('abort')) {
+        throw fallbackError;
+      }
+      console.error('所有模型均感应失败:', fallbackError);
+      return {
+        text: '感应到你的思绪正在流动。再多分享一点，我一直在听。',
+        visualTarget: { color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 },
+        roundScore: 10,
+        isFinal: false
+      };
+    }
   }
 };
 

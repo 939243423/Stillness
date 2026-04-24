@@ -227,7 +227,7 @@ export default function Index() {
                       <Text className='aura-text'>感应中</Text>
                       <View className='aura-dot' />
                       <View className='stop-btn' onClick={stopResonance}>
-                        <Text className='stop-text'>停止回应</Text>
+                        <Text className='stop-text'>停止</Text>
                       </View>
                     </View>
                 </View>
