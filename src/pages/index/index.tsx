@@ -142,6 +142,22 @@ export default function Index() {
     return quotes[Math.floor(Math.random() * quotes.length)];
   });
 
+  const handleMessageAction = useCallback((idx: number, content: string) => {
+    Taro.showActionSheet({
+      itemList: ['复制', '删除'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          Taro.setClipboardData({
+            data: content,
+            success: () => Taro.showToast({ title: '已复制', icon: 'success' })
+          });
+        } else if (res.tapIndex === 1) {
+          setChatHistory(prev => prev.filter((_, i) => i !== idx));
+        }
+      }
+    });
+  }, []);
+
   return (
     <View className='index'>
       {/* 动态背景 */}
@@ -217,6 +233,7 @@ export default function Index() {
                   key={idx} 
                   id={`msg-${idx}`}
                   className={`chat-bubble ${item.role}`}
+                  onLongPress={() => handleMessageAction(idx, item.content)}
                 >
                   <Text className='bubble-text'>{item.content}</Text>
                 </View>
@@ -226,9 +243,6 @@ export default function Index() {
                     <View className='loading-aura'>
                       <Text className='aura-text'>感应中</Text>
                       <View className='aura-dot' />
-                      <View className='stop-btn' onClick={stopResonance}>
-                        <Text className='stop-text'>停止</Text>
-                      </View>
                     </View>
                 </View>
               )}
@@ -249,7 +263,10 @@ export default function Index() {
                 cursorSpacing={25}
                 adjustPosition={true}
               />
-              <View className={`send-trigger ${thought.trim() && !loading ? 'active' : ''}`} onClick={handleNextRound}>
+              <View 
+                className={`send-trigger ${loading ? 'loading' : (thought.trim() ? 'active' : '')}`} 
+                onClick={loading ? stopResonance : handleNextRound}
+              >
                 <View className='send-icon' />
               </View>
             </View>
