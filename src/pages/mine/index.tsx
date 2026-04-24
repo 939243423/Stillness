@@ -40,16 +40,21 @@ export default function Mine() {
 
   const onChooseAvatar = (e) => {
     const { avatarUrl } = e.detail;
-    const newInfo = { ...userInfo, avatarUrl };
-    setUserInfo(newInfo);
-    Taro.setStorageSync('user_info', newInfo);
+    setUserInfo(prev => {
+      const newInfo = { ...prev, avatarUrl };
+      Taro.setStorageSync('user_info', newInfo);
+      return newInfo;
+    });
   };
 
-  const onNicknameBlur = (e) => {
+  const onNicknameChange = (e) => {
     const nickName = e.detail.value;
-    const newInfo = { ...userInfo, nickName };
-    setUserInfo(newInfo);
-    Taro.setStorageSync('user_info', newInfo);
+    if (!nickName) return;
+    setUserInfo(prev => {
+      const newInfo = { ...prev, nickName };
+      Taro.setStorageSync('user_info', newInfo);
+      return newInfo;
+    });
   };
 
   const soulInsights = [
@@ -109,7 +114,8 @@ export default function Mine() {
               className='nickname-input' 
               type='nickname' 
               value={userInfo.nickName} 
-              onBlur={onNicknameBlur}
+              onBlur={onNicknameChange}
+              onInput={onNicknameChange}
               placeholder='输入灵魂昵称'
             />
             <Text className='status'>已与自我共鸣 {stats.resonance} 次</Text>

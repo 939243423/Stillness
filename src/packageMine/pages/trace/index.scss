@@ -12,18 +12,45 @@
     z-index: 10;
     padding: 100px 40px 40px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: flex-end;
 
-    .title {
-      font-size: 48px;
-      font-weight: bold;
-      color: var(--text-primary);
+    .header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .title {
+        font-size: 48px;
+        font-weight: bold;
+        color: var(--text-primary);
+      }
+      .subtitle {
+        font-size: 26px;
+        color: var(--text-secondary);
+        opacity: 0.8;
+      }
     }
-    .subtitle {
-      font-size: 26px;
-      color: var(--text-secondary);
-      opacity: 0.8;
+
+    .clear-btn {
+      padding: 12px 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+
+      text {
+        font-size: 22px;
+        color: #e74c3c;
+        letter-spacing: 2px;
+        font-weight: 300;
+      }
+
+      &:active {
+        opacity: 0.6;
+        transform: scale(0.95);
+      }
     }
   }
 

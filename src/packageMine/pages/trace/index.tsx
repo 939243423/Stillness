@@ -24,13 +24,37 @@ export default function Trace() {
     setHistory(data);
   });
 
+  const onClearAll = () => {
+    if (history.length === 0) return;
+    
+    Taro.showModal({
+      title: '清空共鸣印记',
+      content: '确定要抹除所有过往的灵魂共鸣记录吗？此操作不可撤销。',
+      confirmColor: '#e74c3c',
+      success: (res) => {
+        if (res.confirm) {
+          Taro.removeStorageSync('resonance_history');
+          setHistory([]);
+          Taro.showToast({ title: '过往已归零', icon: 'success' });
+        }
+      }
+    });
+  };
+
   return (
     <View className={`trace-page ${themeClass}`}>
       <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} />
       
       <View className='trace-header'>
-        <Text className='title'>共鸣印记</Text>
-        <Text className='subtitle'>记录每一次灵魂回响</Text>
+        <View className='header-main'>
+          <Text className='title'>共鸣印记</Text>
+          <Text className='subtitle'>记录每一次灵魂回响</Text>
+        </View>
+        {history.length > 0 && (
+          <View className='clear-btn' onClick={onClearAll}>
+            <Text>清空</Text>
+          </View>
+        )}
       </View>
 
       <ScrollView className='trace-list' scrollY showScrollbar={false} enhanced>
