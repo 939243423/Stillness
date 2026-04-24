@@ -40,4 +40,5 @@ export default defineAppConfig({
     navigationBarTitleText: 'Taro App',
     navigationBarTextStyle: 'black',
   },
+  lazyCodeLoading: 'requiredComponents',
 })

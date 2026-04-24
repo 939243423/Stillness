@@ -1,14 +1,16 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text, Textarea, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
-import { ResonanceRhythm } from '../../components/ResonanceRhythm';
-import { WishBottle } from '../../components/WishBottle';
-import { ResonanceTip } from '../../components/ResonanceTip';
 import { useRewardAd } from '../../hooks/useRewardAd';
 import { getResonanceResponse } from '../../services/aiService';
 import { useTabActive } from '../../hooks/useTabActive';
 import './index.scss';
+
+// 按需加载性能优化
+const ResonanceRhythm = lazy(() => import('../../components/ResonanceRhythm').then(m => ({ default: m.ResonanceRhythm })));
+const WishBottle = lazy(() => import('../../components/WishBottle').then(m => ({ default: m.WishBottle })));
+const ResonanceTip = lazy(() => import('../../components/ResonanceTip').then(m => ({ default: m.ResonanceTip })));
 
 export default function Index() {
   const [loading, setLoading] = useState(false);
@@ -238,12 +240,17 @@ export default function Index() {
                 <View className={`tool-tab ${mode === 'bottle' ? 'active' : ''}`} onClick={() => setMode('bottle')}>情绪瓶子</View>
              </View>
              <View className='tool-display'>
-                {mode === 'muyu' ? <ResonanceRhythm /> : <WishBottle />}
+                <Suspense fallback={null}>
+                  {mode === 'muyu' ? <ResonanceRhythm /> : <WishBottle />}
+                </Suspense>
              </View>
           </View>
         </View>
       )}
-      <ResonanceTip show={showTip} onClose={() => setShowTip(false)} />
+      
+      <Suspense fallback={null}>
+        <ResonanceTip show={showTip} onClose={() => setShowTip(false)} />
+      </Suspense>
     </View>
   );
 }
