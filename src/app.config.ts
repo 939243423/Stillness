@@ -37,7 +37,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: 'Taro App',
+    navigationBarTitleText: '灵魂共鸣',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',

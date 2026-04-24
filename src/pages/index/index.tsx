@@ -145,6 +145,7 @@ export default function Index() {
             <Textarea 
               className='thought-input'
               placeholder='写下第一缕思绪，开启深度共鸣之旅...'
+              placeholderStyle='font-size: 32rpx; color: rgba(44, 62, 80, 0.25); line-height: 1.8;'
               value={thought}
               onInput={(e) => setThought(e.detail.value)}
               maxlength={100}
@@ -223,6 +224,8 @@ export default function Index() {
                 onConfirm={handleNextRound}
                 autoHeight
                 fixed
+                cursorSpacing={40}
+                adjustPosition={true}
               />
               <View className={`send-trigger ${thought.trim() && !loading ? 'active' : ''}`} onClick={handleNextRound}>
                 <View className='send-icon' />

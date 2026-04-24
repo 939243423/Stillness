@@ -61,9 +61,6 @@ export const getResonanceResponse = async (messages: { role: 'user' | 'assistant
           },
           ...messages
         ],
-        temperature: 0.7,
-        top_p: 0.7,
-        max_tokens: 512,
         response_format: { type: 'json_object' }
       }
     });
@@ -124,9 +121,6 @@ export const getFinalSoulInsight = async (history: any[]): Promise<AIInsight> =>
           },
           ...history
         ],
-        temperature: 0.8,
-        top_p: 0.7,
-        max_tokens: 1024,
         response_format: { type: 'json_object' }
       }
     });
