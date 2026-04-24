@@ -8,9 +8,11 @@ export default defineAppConfig({
       root: 'packageMine',
       pages: [
         'pages/trace/index',
-        'pages/guide/index',
-        'pages/about/index',
+        'pages/trace/detail',
         'pages/config/index',
+        'pages/settings/index',
+        'pages/guide/index',
+        'pages/about/index'
       ]
     }
   ],

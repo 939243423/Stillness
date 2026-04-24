@@ -33,19 +33,35 @@ export const getResonanceResponse = async (
 ): Promise<ResonanceResponse> => {
   const config = Taro.getStorageSync('resonance_config') || {
     archetype: '温暖感应者',
-    tone: '温和委婉'
+    tone: '温和委婉',
+    coreMemory: 'continuous'
   };
+
+  let strategyInstruction = '';
+  if (config.archetype === '赛博修行者') {
+    strategyInstruction = '回应必须极其简短（15字以内），类似禅语，富于意境。';
+  } else if (config.archetype === '森林德鲁伊') {
+    strategyInstruction = '从哲学或心理学深度拆解用户的每一个情绪细节，给予富有智慧的洞察建议。';
+  } else if (config.archetype === '寂静观察者') {
+    strategyInstruction = '不要输出任何文字回应。请将 "text" 字段设为空字符串 ""。通过 visualTarget 的演化来回应用户的灵魂波动。';
+  }
 
   const systemPrompt = `你是一位灵魂共鸣师。
     当前设定：${config.archetype} (${config.tone})。
+    ${strategyInstruction}
     任务：与用户开启极简、空灵且具启发性的深度对话。
     按 JSON 回复：
     {
-      "text": "你的回应，100字以内",
+      "text": "你的回应内容",
       "visualTarget": {"color": "hex", "intensity": 0-1, "flowSpeed": 0-1},
       "roundScore": 0-100,
       "isFinal": false
     }`;
+
+  // 处理记忆模式
+  const finalMessages = config.coreMemory === 'instant' 
+    ? [messages[messages.length - 1]] 
+    : messages;
 
   const requestModel = async (model: string, timeout: number): Promise<ResonanceResponse> => {
     const task = Taro.request({
@@ -60,7 +76,7 @@ export const getResonanceResponse = async (
         model,
         messages: [
           { role: 'system', content: systemPrompt },
-          ...messages
+          ...finalMessages
         ],
         response_format: { type: 'json_object' }
       }

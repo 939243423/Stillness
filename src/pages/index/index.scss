@@ -245,140 +245,145 @@
     width: 100vw;
     height: 100vh;
     z-index: 100;
-    display: flex;
-    flex-direction: column;
-    background: transparent;
-    padding-bottom: calc(140px + env(safe-area-inset-bottom));
-    animation: stageEnter 1s cubic-bezier(0.22, 1, 0.36, 1);
 
-    &.closing {
-      animation: stageExit 0.6s forwards cubic-bezier(0.64, 0, 0.78, 0);
-    }
-
-    .resonance-header {
-      padding: 100px 60px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .depth-indicator {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        .depth-dot {
-          width: 12px;
-          height: 12px;
-          background: #a8d5ba;
-          border-radius: 50%;
-          box-shadow: 0 0 15px #a8d5ba;
-        }
-        .depth-text {
-          font-size: 24px;
-          color: #2c3e50;
-          letter-spacing: 4px;
-          font-weight: 300;
-        }
-      }
-
-      .close-resonance {
-        font-size: 24px;
-        color: #95a5a6;
-        letter-spacing: 2px;
-        padding: 10px 20px;
-      }
-    }
-
-    .chat-scroll {
+    .index__resonance {
       flex: 1;
-      width: 100%;
-      height: 0;
-      padding: 0 40px;
-      box-sizing: border-box;
-      overflow-y: scroll;
-      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      padding-bottom: calc(140px + env(safe-area-inset-bottom));
+      animation: stageEnter 1s cubic-bezier(0.22, 1, 0.36, 1);
 
-      .chat-list {
+      &.closing {
+        animation: stageExit 0.6s forwards cubic-bezier(0.64, 0, 0.78, 0);
+      }
+
+      .resonance-header-nav {
+        position: absolute;
+        top: 100px;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 0 40px;
         display: flex;
-        flex-direction: column;
-        gap: 40px;
-        padding-bottom: 320px;
+        justify-content: space-between;
+        align-items: center;
 
-        .chat-bubble {
-          max-width: 85%;
-          padding: 30px 40px;
-          border-radius: 40px;
-          font-size: 30px;
-          line-height: 1.6;
-          letter-spacing: 1px;
-          word-break: break-all;
-          animation: bubbleFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-
-          &.user {
-            align-self: flex-end;
-            background: rgba(168, 213, 186, 0.12);
-            color: #2c3e50;
-            border-radius: 40px 40px 4px 40px;
-            backdrop-filter: blur(5px);
-          }
-
-          &.assistant {
-            align-self: flex-start;
-            background: rgba(255, 255, 255, 0.45);
-            color: #34495e;
-            border-radius: 40px 40px 40px 4px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
-            
-            &.loading {
-              padding: 20px 40px;
-            }
+        .back-btn {
+          width: 80px;
+          height: 80px;
+          background: rgba(255, 255, 255, 0.4);
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          backdrop-filter: blur(10px);
+          &::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border-left: 4px solid #2c3e50;
+            border-bottom: 4px solid #2c3e50;
+            transform: rotate(45deg);
+            margin-left: 8px;
           }
         }
 
-        .loading-aura {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 10px 0;
+        .finish-session-btn {
+          background: rgba(44, 62, 80, 0.08);
+          padding: 18px 40px;
+          border-radius: 40px;
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          transition: all 0.3s;
           
-          .aura-text {
+          Text {
             font-size: 24px;
-            color: rgba(168, 213, 186, 0.8);
-            letter-spacing: 4px;
-            animation: textBreathe 2s infinite ease-in-out;
+            color: #2c3e50;
+            letter-spacing: 2px;
+            font-weight: 500;
           }
 
-          .aura-dot {
-            width: 8px;
-            height: 8px;
-            background: #a8d5ba;
-            border-radius: 50%;
-            filter: blur(2px);
-            animation: pulseWave 2s infinite ease-out;
+          &:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.4);
           }
+        }
+      }
 
-          .stop-btn {
-            margin-left: 30px;
-            padding: 8px 0;
-            background: transparent;
-            border-bottom: 1px solid rgba(231, 76, 60, 0.2);
-            transition: all 0.3s;
-            
-            &:active {
-              opacity: 0.5;
+      .chat-scroll {
+        flex: 1;
+        width: 100%;
+        height: 0;
+        padding: 0 40px;
+        box-sizing: border-box;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+
+        .chat-list {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+          padding: 220px 0 320px;
+
+          .chat-bubble {
+            max-width: 85%;
+            padding: 30px 40px;
+            border-radius: 40px;
+            font-size: 30px;
+            line-height: 1.6;
+            letter-spacing: 1px;
+            word-break: break-all;
+            animation: bubbleFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+
+            &.user {
+              align-self: flex-end;
+              background: rgba(168, 213, 186, 0.12);
+              color: #2c3e50;
+              border-radius: 40px 40px 4px 40px;
+              backdrop-filter: blur(5px);
             }
 
-            .stop-text {
-              font-size: 20px;
-              color: #e74c3c;
-              font-weight: 300;
-              letter-spacing: 2px;
-              opacity: 0.8;
+            &.assistant {
+              align-self: flex-start;
+              background: rgba(255, 255, 255, 0.45);
+              color: #34495e;
+              border-radius: 40px 40px 40px 4px;
+              backdrop-filter: blur(10px);
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+              
+              &.loading {
+                padding: 20px 40px;
+              }
+            }
+          }
+
+          .loading-aura {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            
+            .aura-text {
+              font-size: 24px;
+              color: rgba(168, 213, 186, 0.8);
+              letter-spacing: 4px;
+            }
+
+            .aura-dot {
+              width: 8px;
+              height: 8px;
+              background: #a8d5ba;
+              border-radius: 50%;
+              filter: blur(2px);
+              animation: pulseWave 2s infinite ease-out;
             }
           }
         }
       }
-    }
+
+    } // End of .index__resonance
 
     .user-input-tray {
       position: fixed;
@@ -417,20 +422,19 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+          &.active {
+            background: #a8d5ba;
+          }
 
           &.loading {
             background: #e74c3c;
-            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
-            transform: scale(1.05);
-
             .send-icon {
               border: none;
               width: 24px;
               height: 24px;
               background: #fff;
               border-radius: 4px;
-              transform: none;
             }
           }
 
@@ -440,44 +444,22 @@
             border-top: 12px solid transparent;
             border-bottom: 12px solid transparent;
             border-left: 20px solid #fff;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           }
         }
       }
     }
-  }
-}
-
-.ripple-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, transparent 80%);
-  filter: blur(40px);
-  animation: soulMistExpand 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  pointer-events: none;
-}
-
-.therapy-stage {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: transparent;
-  animation: stageEnter 1s cubic-bezier(0.22, 1, 0.36, 1);
-  
-  &.closing {
-    animation: stageExit 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
-  }
+  } // End of .resonance-stage
 }
 
 @keyframes soulMistExpand {
   0% { transform: scale(0.5); opacity: 0; }
   30% { opacity: 1; }
   100% { transform: scale(3.5); opacity: 0; }
+}
+
+@keyframes stageEnter {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes stageExit {
@@ -498,11 +480,6 @@
 @keyframes dotPulse {
   0%, 80%, 100% { transform: scale(0); }
   40% { transform: scale(1); }
-}
-
-@keyframes stageEnter {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes pulseWave {

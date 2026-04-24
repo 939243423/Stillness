@@ -35,6 +35,7 @@ export default function Mine() {
     const routes: Record<string, string> = {
       '我的共鸣历史': '/packageMine/pages/trace/index',
       '共鸣空间配置': '/packageMine/pages/config/index',
+      '系统设置': '/packageMine/pages/settings/index',
       '灵魂感应手册': '/packageMine/pages/guide/index',
       '关于灵魂共鸣': '/packageMine/pages/about/index'
     };
@@ -48,6 +49,7 @@ export default function Mine() {
   const menuItems = [
     { title: '我的共鸣历史', iconClass: 'icon-history' },
     { title: '共鸣空间配置', iconClass: 'icon-config' },
+    { title: '系统设置', iconClass: 'icon-settings' },
     { title: '灵魂感应手册', iconClass: 'icon-guide' },
     { title: '关于灵魂共鸣', iconClass: 'icon-about' },
   ];

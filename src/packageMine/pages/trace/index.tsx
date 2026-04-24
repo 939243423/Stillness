@@ -35,7 +35,7 @@ export default function Trace() {
         {history.length > 0 ? (
           history.map((item) => (
             <View key={item.id} className='trace-item'>
-              <View className='item-card'>
+              <View className='item-card' onClick={() => Taro.navigateTo({ url: `/packageMine/pages/trace/detail?id=${item.id}` })}>
                 <View className='item-time-tag'>
                   <Text className='date'>{item.date}</Text>
                   <Text className='time'>{item.time}</Text>
