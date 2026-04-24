@@ -27,7 +27,10 @@ export interface ResonanceResponse {
 /**
  * 10轮沉浸式心灵理疗对话
  */
-export const getResonanceResponse = async (messages: { role: 'user' | 'assistant', content: string }[]): Promise<ResonanceResponse> => {
+export const getResonanceResponse = async (
+  messages: { role: 'user' | 'assistant', content: string }[],
+  onTask?: (task: Taro.RequestTask<any>) => void
+): Promise<ResonanceResponse> => {
   const config = Taro.getStorageSync('resonance_config') || {
     archetype: '温暖感应者',
     tone: '温和委婉'
@@ -45,9 +48,10 @@ export const getResonanceResponse = async (messages: { role: 'user' | 'assistant
     }`;
 
   try {
-    const response = await Taro.request({
+    const task = Taro.request({
       url: BASE_URL,
       method: 'POST',
+      timeout: 15000,
       header: {
         'Authorization': `Bearer ${SILICON_KEY}`,
         'Content-Type': 'application/json',
@@ -64,6 +68,9 @@ export const getResonanceResponse = async (messages: { role: 'user' | 'assistant
         response_format: { type: 'json_object' }
       }
     });
+
+    if (onTask) onTask(task);
+    const response = await task;
 
     if (response.statusCode === 200) {
       let content = response.data.choices[0].message.content;

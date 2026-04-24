@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, lazy, Suspense } from 'react';
+import { useState, useCallback, useEffect, lazy, Suspense, useRef } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text, Textarea, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
@@ -53,6 +53,17 @@ export default function Index() {
     }
   }, [chatHistory]);
 
+  const requestTaskRef = useRef<Taro.RequestTask<any> | null>(null);
+
+  const stopResonance = useCallback(() => {
+    if (requestTaskRef.current) {
+      requestTaskRef.current.abort();
+      requestTaskRef.current = null;
+    }
+    setLoading(false);
+    Taro.showToast({ title: '已停止共鸣感应', icon: 'none' });
+  }, []);
+
   const startResonance = useCallback(async () => {
     if (!thought.trim()) {
       Taro.vibrateShort({ type: 'medium' });
@@ -73,7 +84,9 @@ export default function Index() {
     setThought('');
 
     // 并行请求 AI
-    const aiPromise = getResonanceResponse([initialUserMsg]);
+    const aiPromise = getResonanceResponse([initialUserMsg], (task) => {
+       requestTaskRef.current = task;
+    });
 
     setTimeout(async () => {
       setIsResonanceActive(true);
@@ -85,9 +98,11 @@ export default function Index() {
         setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
         setVisualState(res.visualTarget);
       } catch (e) {
-        Taro.showToast({ title: '频率连接不稳', icon: 'none' });
+        if (e.errMsg?.includes('abort')) return;
+        Taro.showToast({ title: '感应频率超时或中断', icon: 'none' });
       } finally {
         setLoading(false);
+        requestTaskRef.current = null;
       }
     }, 800);
   }, [thought, showAd]);
@@ -107,14 +122,18 @@ export default function Index() {
     setThought('');
 
     try {
-      const res = await getResonanceResponse(updatedHistory);
+      const res = await getResonanceResponse(updatedHistory, (task) => {
+        requestTaskRef.current = task;
+      });
       setChatHistory(prev => [...prev, { role: 'assistant', content: res.text }]);
       setVisualState(res.visualTarget);
       setRoundIndex(prev => prev + 1);
     } catch (e) {
-      Taro.showToast({ title: '感应中断', icon: 'none' });
+      if (e.errMsg?.includes('abort')) return;
+      Taro.showToast({ title: '感应超时，请稍后重试', icon: 'none' });
     } finally {
       setLoading(false);
+      requestTaskRef.current = null;
     }
   }, [chatHistory, thought, loading, roundIndex]);
 
@@ -207,6 +226,9 @@ export default function Index() {
                     <View className='loading-aura'>
                       <Text className='aura-text'>感应中</Text>
                       <View className='aura-dot' />
+                      <View className='stop-btn' onClick={stopResonance}>
+                        <Text className='stop-text'>停止回应</Text>
+                      </View>
                     </View>
                 </View>
               )}
