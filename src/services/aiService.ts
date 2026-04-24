@@ -1,7 +1,10 @@
 import Taro from '@tarojs/taro';
 
 const SILICON_KEY = 'sk-grregxjdqfcoutmccnxxtkuqingipcosydblwiyefekktdcr';
-const BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions';
+const ANYWHERE_KEY = 'sk-S73C9wvuIIwDK2K9wbhAlS9gl4rfjVM3rCt99GTwmXJbUOSo';
+
+const SILICON_URL = 'https://api.siliconflow.cn/v1/chat/completions';
+const ANYWHERE_URL = 'https://api.chatanywhere.tech/v1/chat/completions';
 
 export interface SoulInsight {
   archetype: string;        // 灵魂原型，如 '星辰编织者'
@@ -63,13 +66,17 @@ export const getResonanceResponse = async (
     ? [messages[messages.length - 1]] 
     : messages;
 
-  const requestModel = async (model: string, timeout: number): Promise<ResonanceResponse> => {
+  const requestModel = async (
+    model: string, 
+    timeout: number, 
+    config?: { url?: string; key?: string }
+  ): Promise<ResonanceResponse> => {
     const task = Taro.request({
-      url: BASE_URL,
+      url: config?.url || SILICON_URL,
       method: 'POST',
       timeout,
       header: {
-        'Authorization': `Bearer ${SILICON_KEY}`,
+        'Authorization': `Bearer ${config?.key || SILICON_KEY}`,
         'Content-Type': 'application/json',
       },
       data: {
@@ -78,7 +85,9 @@ export const getResonanceResponse = async (
           { role: 'system', content: systemPrompt },
           ...finalMessages
         ],
-        response_format: { type: 'json_object' }
+        response_format: { type: 'json_object' },
+        enable_thinking: false,
+        max_tokens: 1024
       }
     });
 
@@ -95,29 +104,36 @@ export const getResonanceResponse = async (
   };
 
   try {
-    // 优先试用 MiniMax (5s 限制)
-    return await requestModel('Pro/MiniMaxAI/MiniMax-M2.5', 5000);
+    // 1. 优先使用 Qwen (6s) - SiliconFlow
+    return await requestModel('Qwen/Qwen3.6-35B-A3B', 6000);
   } catch (error) {
-    // 如果是用户主动取消，则不再重试
-    if (error.errMsg?.includes('abort')) {
-      throw error;
-    }
+    if (error.errMsg?.includes('abort')) throw error;
     
-    console.warn('MiniMax 响应慢或失败，切换至 Kimi...');
+    console.warn('Qwen 响应慢或失败，切换至 MiniMax (6s) - SiliconFlow...');
     try {
-      // 备选方案 Kimi (10s 限制)
-      return await requestModel('Pro/moonshotai/Kimi-K2.5', 10000);
+      // 2. 备选 MiniMax (6s) - SiliconFlow
+      return await requestModel('Pro/MiniMaxAI/MiniMax-M2.5', 6000);
     } catch (fallbackError) {
-      if (fallbackError.errMsg?.includes('abort')) {
-        throw fallbackError;
+      if (fallbackError.errMsg?.includes('abort')) throw fallbackError;
+      
+      console.warn('MiniMax 响应慢或失败，切换至 GPT (6s) - ChatAnywhere...');
+      try {
+        // 3. 最终备选 GPT-5-nano (6s) - ChatAnywhere 节点
+        return await requestModel('gpt-5-nano', 6000, { 
+          url: ANYWHERE_URL, 
+          key: ANYWHERE_KEY 
+        });
+      } catch (finalError) {
+        if (finalError.errMsg?.includes('abort')) throw finalError;
+        
+        console.error('所有模型均感应失败，返回兜底话术');
+        return {
+          text: '感应到你的思绪正在流动。再多分享一点，我一直在听。',
+          visualTarget: { color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 },
+          roundScore: 10,
+          isFinal: false
+        };
       }
-      console.error('所有模型均感应失败:', fallbackError);
-      return {
-        text: '感应到你的思绪正在流动。再多分享一点，我一直在听。',
-        visualTarget: { color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 },
-        roundScore: 10,
-        isFinal: false
-      };
     }
   }
 };
@@ -128,7 +144,7 @@ export const getResonanceResponse = async (
 export const getFinalSoulInsight = async (history: any[]): Promise<SoulInsight> => {
   try {
     const response = await Taro.request({
-      url: BASE_URL,
+      url: SILICON_URL,
       method: 'POST',
       header: {
         'Authorization': `Bearer ${SILICON_KEY}`,
