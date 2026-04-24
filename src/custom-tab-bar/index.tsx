@@ -10,14 +10,14 @@ export default function CustomTabBar() {
     {
       pagePath: '/pages/index/index',
       text: '共鸣',
-      iconPath: '../assets/images/tab-resonance.png',
-      selectedIconPath: '../assets/images/tab-resonance-active.png'
+      // iconPath: '../assets/images/tab-resonance.png',
+      // selectedIconPath: '../assets/images/tab-resonance-active.png'
     },
     {
       pagePath: '/pages/mine/index',
       text: '我的',
-      iconPath: '../assets/images/tab-mine.png',
-      selectedIconPath: '../assets/images/tab-mine-active.png'
+      // iconPath: '../assets/images/tab-mine.png',
+      // selectedIconPath: '../assets/images/tab-mine-active.png'
     }
   ];
 
