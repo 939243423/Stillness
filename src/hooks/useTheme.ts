@@ -1,29 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import Taro from '@tarojs/taro';
 import { STORAGE_KEY } from '../constants';
+import { getThemeState } from '../utils';
 
 export function useTheme() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const checkTheme = () => {
     const settings = Taro.getStorageSync(STORAGE_KEY.SYSTEM_SETTINGS);
-    if (!settings) return 'light';
-
-    if (settings.darkModeManual) {
-      return 'dark';
-    }
-
-    if (settings.darkModeAuto) {
-      // 1. 检查时段 (20:00 - 06:00)
-      const hour = new Date().getHours();
-      if (hour >= 20 || hour < 6) return 'dark';
-      
-      // 2. 检查系统主题 (需要基础库支持)
-      const systemInfo = Taro.getAppBaseInfo();
-      if (systemInfo.theme === 'dark') return 'dark';
-    }
-
-    return 'light';
+    return getThemeState(settings);
   };
 
   useEffect(() => {

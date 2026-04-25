@@ -7,6 +7,7 @@ import { getResonanceResponse, getFinalSoulInsight, SoulInsight } from '../../se
 import { useTabActive } from '../../hooks/useTabActive';
 import AudioService from '../../services/audioService';
 import { useTheme } from '../../hooks/useTheme';
+import { isNightTime } from '../../utils';
 import { DEFAULT_SYSTEM_SETTINGS, STORAGE_KEY } from '../../constants';
 import './index.scss';
 
@@ -69,13 +70,8 @@ export default function Index() {
     if (systemSettings.darkModeManual) {
       targetAura = getNightPreset();
     } else if (systemSettings.darkModeAuto) {
-      const hour = new Date().getHours();
-      const isSystemDark = Taro.getAppBaseInfo().theme === 'dark';
-      // 满足时间 (19:00-05:00) 或 系统黑暗模式
-      if (hour >= 19 || hour < 5 || isSystemDark) {
+      if (isNightTime() || Taro.getAppBaseInfo().theme === 'dark') {
         targetAura = getNightPreset();
-      } else {
-        targetAura = getTimeBasedAura();
       }
     }
 
@@ -84,7 +80,7 @@ export default function Index() {
       color: targetAura.color,
       intensity: targetAura.intensity
     }));
-  }, [systemSettings.darkModeManual, systemSettings.darkModeAuto, isResonanceActive, getTimeBasedAura, getNightPreset]);
+  }, [systemSettings.darkModeManual, systemSettings.darkModeAuto, isResonanceActive, getNightPreset]);
 
   // 音频自适应逻辑
   useEffect(() => {

@@ -40,3 +40,26 @@ export const formatDate = (date: Date | string | number, fmt = 'YYYY-MM-DD') => 
  */
 export const maskPhone = (phone: string) =>
   phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+
+/**
+ * 环境与主题判断
+ */
+export const isNightTime = () => {
+  const hour = new Date().getHours();
+  return hour >= 19 || hour < 6; // 统一为 19:00 - 06:00
+};
+
+export const getThemeState = (settings: any) => {
+  if (!settings) return 'light';
+  if (settings.darkModeManual) return 'dark';
+  if (settings.darkModeAuto) {
+    if (isNightTime()) return 'dark';
+    try {
+      const systemInfo = Taro.getAppBaseInfo();
+      if (systemInfo.theme === 'dark') return 'dark';
+    } catch (e) {
+      // 兼容老版本
+    }
+  }
+  return 'light';
+};
