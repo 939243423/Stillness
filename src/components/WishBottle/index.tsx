@@ -3,7 +3,12 @@ import Taro from '@tarojs/taro';
 import { View, Canvas, Text } from '@tarojs/components';
 import './index.scss';
 
-const VIBE_PHRASES = ['当下即好', '万物温柔', '生机盎然', '平和喜悦', '未来可期', '心生欢喜'];
+const VIBE_PHRASES = [
+  '当下即好', '万物温柔', '生机盎然', '平和喜悦', '未来可期', '心生欢喜',
+  '顺其自然', '随遇而安', '岁月静好', '自在如风', '恬淡虚无', '澄怀观道',
+  '灵台清明', '慢慢发光', '治愈自己', '放下包袱', '满怀希望', '保持从容',
+  '一切随缘', '静观其变'
+];
 
 export const WishBottle = () => {
   const [floatings, setFloatings] = useState<any[]>([]);

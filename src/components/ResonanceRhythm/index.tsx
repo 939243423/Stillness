@@ -3,7 +3,11 @@ import Taro from '@tarojs/taro';
 import { View, Text, Canvas } from '@tarojs/components';
 import './index.scss';
 
-const RESONANCE_TEXTS = ['宁静', '共鸣', '律动', '感应', '温柔', '回响'];
+const RESONANCE_TEXTS = [
+  '宁静', '共鸣', '律动', '感应', '温柔', '回响',
+  '启迪', '觉醒', '纯净', '归一', '绽放', '灵感',
+  '喜悦', '空灵', '澄澈'
+];
 
 export const ResonanceRhythm = () => {
   const [scale, setScale] = useState(1);
