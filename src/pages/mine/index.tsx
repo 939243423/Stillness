@@ -8,13 +8,13 @@ import './index.scss';
 
 // SVG Assets for Mine Page
 const MINE_ICONS = {
-  resonance: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjYiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiIG9wYWNpdHk9IjAuMyIvPjwvc3ZnPg==',
-  insight: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTEyIDNsMS45IDEuOS40IDIuMS45LjUgMi4xLjQgMS45IDEuOS0xLjkgMS45LS40IDIuMS0uOS41LTIuMS40LTEuOSAxLjktMS45LTEuOS0uNC0yLjEtLjktLjUtMi4xLS40LTEuOS0xLjkgMS45LTEuOS40LTIuMS45LS41IDIuMS0uNCAxLjktMS45eiIvPjwvc3ZnPg==',
+  resonance: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iNC41Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iOCIgb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTEuNSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+',
+  insight: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTEyIDJsMy4wOSA2LjI2TDIyIDkuMjdsLTUgNC44NyAxLjE4IDYuODhMMTIgMTcuNzdsLTYuMTggMy4yNUw3IDE0LjE0IDIgOS4yN2w2LjkxLTEuMDFMMTIgMnoiLz48L3N2Zz4=',
   calm: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTEyIDIyYzUuNTIgMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMHpNMTIgMnYyMCIvPjwvc3ZnPg==',
   history: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTIgNnY2bDQgMiIvPjwvc3ZnPg==',
   config: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjIiPjxsaW5lIHgxPSI0IiB5MT0iMjEiIHgyPSI0IiB5Mj0iMTQiLz48bGluZSB4MT0iNCIgeTE9IjEwIiB4Mj0iNCIgeTI9IjMiLz48bGluZSB4MT0iMTIiIHkxPSIyMSIgeDI9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMTIiIHkxPSI4IiB4Mj0iMTIiIHkyPSIzIi8+PGxpbmUgeDE9IjIwIiB5MT0iMjEiIHgyPSIyMCIgeTI9IjE2Ii8+PGxpbmUgeDE9IjIwIiB5MT0iMTIiIHgyPSIyMCIgeTI9IjMiLz48bGluZSB4MT0iMiIgeTE9IjE0IiB4Mj0iNiIgeTI9IjE0Ii8+PGxpbmUgeDE9IjEwIiB5MT0iOCIgeDI9IjE0IiB5Mj0iOCIvPjxsaW5lIHgxPSIxOCIgeTE9IjE2IiB4Mj0iMjIiIHkyPSIxNiIvPjwvc3ZnPg==',
   guide: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTQgMTkuNXYtMTVBMi41IDIuNSAwIDAgMSA2LjUgMkgyMHYyMEg2LjVBMi41IDIuNSAwIDAgMSA2LjUgMTdIMjAiLz48L3N2Zz4=',
-  settings: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxwYXRoIGQ9Ik0xOS40IDE1YTEuNjUgMS42NSAwIDAgMCAuMzMgMS44MmwuMDYuMDZhMiAyIDAgMCAxLTIuODMgMi44M2wtLjA2LS4wNmExLjY1IDEuNjUgMCAwIDAtMS44Mi0uMzMgMS42NSAxLjY1IDAgMCAwLTEgMS41di4xYTIgMiAwIDAgMS00IDB2LS4xYTEuNjUgMS42NSAwIDAgMC0xLTEuNSAxLjY1IDEuNjUgMCAwIDAtMS44My4zM2wtLjA2LjA2YTIgMiAwIDAgMS0yLjgzLTIuODNsLjA2LS4wNmExLjY1IDEuNjUgMCAwIDAgLjMzLTEuODIgMS42NSAxLjY1IDAgMCAwLTEuNS0xdi0uMWEyIDIgMCAwIDEgMC00di4xYTEuNjUgMS42NSAwIDAgMCAxLjUtMWExLjY1IDEuNjUgMCAwIDAtLjMzLTEuODJsLS4wNi0uMDZhMiAyIDAgMCAxIDIuODMtMi44M2wuMDYuMDZhMS42NSAxLjY1IDAgMCAwIDEuODIuMzMgMS42NSAxLjY1IDAgMCAwIDEtMS41di0uMWEyIDIgMCAwIDEgNCAwdi4xYTEuNjUgMS42NSAwIDAgMCAxIDEuNSAxLjY1IDEuNjUgMCAwIDAgMS44My4zM2wuMDYuMDZhMiAyIDAgMCAxIDIuODMtMi44M2wtLjA2LjA2YTEuNjUgMS42NSAwIDAgMC0uMzMgMS44MiAxLjY1IDEuNjUgMCAwIDAgMS41IDF6Ii8+PC9zdmc+',
+  settings: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNiZGMzYzciIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMi4yMiAyaC0uNDRhMiAyIDAgMCAwLTIgMnYuMThhMiAyIDAgMCAxLTEgMS43M2wtLjQzLjI1YTIgMiAwIDAgMS0yIDBsLS4xNS0uMDhhMiAyIDAgMCAwLTIuNzMuNzNsLS4yMi4zOGEyIDIgMCAwIDAgLjczIDIuNzNsLjE1LjFhMiAyIDAgMCAxIDEgMS43MnYuNTFhMiAyIDAgMCAxLTEgMS43NGwtLjE1LjA5YTIgMiAwIDAgMC0uNzMgMi43M2wuMjIuMzhhMiAyIDAgMCAwIDIuNzMuNzNsLjE1LS4wOGEyIDIgMCAwIDEgMiAwbC40My4yNWEyIDIgMCAwIDEgMSAxLjczVjIwYTIgMiAwIDAgMCAyIDJoLjQ0YTIgMiAwIDAgMCAyLTJ2LS4xOGEyIDIgMCAwIDEgMS0xLjczbC40My0uMjVhMiAyIDAgMCAxIDIgMGwuMTUuMDhhMiAyIDAgMCAwIDIuNzMtLjczbC4yMi0uMzlhMiAyIDAgMCAwLS43My0yLjczbC0uMTUtLjA4YTIgMiAwIDAgMS0xLTEuNzR2LS41YTIgMiAwIDAgMSAxLTEuNzRsLjE1LS4wOWEyIDIgMCAwIDAgLjczLTIuNzNsLS4yMi0uMzhhMiAyIDAgMCAwLTIuNzMtLjczbC0uMTUuMDhhMiAyIDAgMCAxLTIgMGwtLjQzLS4yNWEyIDIgMCAwIDEtMS0xLjczVjRhMiAyIDAgMCAwLTItMnoiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIzIi8+PC9zdmc+',
   about: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTEgOHY0TTEyIDE2aC4wMSIvPjwvc3ZnPg==',
 };
 
@@ -37,8 +37,8 @@ export default function Mine() {
     // 加载统计数据
     const resonanceCount = Taro.getStorageSync('resonance_count') || 0;
     const history = Taro.getStorageSync('resonance_history') || [];
-    setStats({ 
-      resonance: resonanceCount, 
+    setStats({
+      resonance: resonanceCount,
       insight: history.length,
       calm: Math.floor(resonanceCount * 1.5)
     });
@@ -69,7 +69,7 @@ export default function Mine() {
     });
   };
 
-const soulInsights = [
+  const soulInsights = [
     { label: '共鸣次数', value: stats.resonance, icon: MINE_ICONS.resonance },
     { label: '灵魂印记', value: stats.insight, icon: MINE_ICONS.insight },
     { label: '平静指数', value: stats.calm, icon: MINE_ICONS.calm },
@@ -101,13 +101,13 @@ const soulInsights = [
   return (
     <View className={`mine-page ${themeClass}`}>
       <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.2} speed={0.1} />
-      
+
       <ScrollView className='mine-content' scrollY showScrollbar={false} enhanced>
         {/* 用户信息卡片 (高阶极简) */}
         <View className='user-card'>
-          <Button 
-            className='avatar-btn' 
-            openType='chooseAvatar' 
+          <Button
+            className='avatar-btn'
+            openType='chooseAvatar'
             onChooseAvatar={onChooseAvatar}
           >
             <View className='avatar-container'>
@@ -122,10 +122,10 @@ const soulInsights = [
             </View>
           </Button>
           <View className='info-box'>
-            <Input 
-              className='nickname-input' 
-              type='nickname' 
-              value={userInfo.nickName} 
+            <Input
+              className='nickname-input'
+              type='nickname'
+              value={userInfo.nickName}
               onBlur={onNicknameChange}
               onInput={onNicknameChange}
               placeholder='输入灵魂昵称'
