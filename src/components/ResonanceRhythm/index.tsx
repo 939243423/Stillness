@@ -46,7 +46,9 @@ export const ResonanceRhythm = () => {
 
     const id = Date.now();
     const text = RESONANCE_TEXTS[Math.floor(Math.random() * RESONANCE_TEXTS.length)];
-    setFloatings((prev) => [...prev, { id, x: clientX, y: clientY - 80, text }]);
+    // 将起始 y 坐标大幅上移，并增加随机水平偏移
+    const randomX = (Math.random() - 0.5) * 60;
+    setFloatings((prev) => [...prev, { id, x: clientX + randomX, y: clientY - 250, text }]);
     setTimeout(() => {
       if (!isUnmounted.current) {
         setFloatings((prev) => prev.filter((f) => f.id !== id));

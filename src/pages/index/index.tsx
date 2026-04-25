@@ -18,19 +18,19 @@ export default function Index() {
   const [showTools, setShowTools] = useState(false);
   const [mode, setMode] = useState<'muyu' | 'bottle'>('muyu');
   const [thought, setThought] = useState('');
-  
+
   // Resonance State
   const [isResonanceActive, setIsResonanceActive] = useState(false);
   const [roundIndex, setRoundIndex] = useState(0);
-  const [chatHistory, setChatHistory] = useState<{role: 'user' | 'assistant', content: string}[]>([]);
+  const [chatHistory, setChatHistory] = useState<{ role: 'user' | 'assistant', content: string }[]>([]);
   const [visualState, setVisualState] = useState({ color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 });
   const [scrollInto, setScrollInto] = useState('');
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [showTip, setShowTip] = useState(false); 
+  const [showTip, setShowTip] = useState(false);
 
   const [systemSettings, setSystemSettings] = useState({
-    ambientSound: 'off',
+    ambientSound: 'rain',
     flowSpeed: 'normal',
     darkModeManual: false,
     darkModeAuto: false
@@ -47,7 +47,7 @@ export default function Index() {
       Taro.removeStorageSync('resonance_seed');
       // 延迟触发，确保 state 已更新且 UI 稳定
       setTimeout(() => {
-        startResonance(seed); 
+        startResonance(seed);
       }, 300);
     }
   });
@@ -58,9 +58,9 @@ export default function Index() {
 
   const getTimeBasedAura = useCallback(() => {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 8) return { color: '#FFF5F5', intensity: 0.2 };
-    if (hour >= 8 && hour < 17) return { color: '#FDFCFB', intensity: 0.15 };
-    if (hour >= 17 && hour < 20) return { color: '#FFF1E0', intensity: 0.3 };
+    if (hour >= 5 && hour < 8) return { color: '#FFF5F5', intensity: 0.25 };
+    if (hour >= 8 && hour < 17) return { color: '#FDFCFB', intensity: 0.2 };
+    if (hour >= 17 && hour < 20) return { color: '#FFF1E0', intensity: 0.35 };
     return getNightPreset();
   }, [getNightPreset]);
 
@@ -68,7 +68,7 @@ export default function Index() {
   useEffect(() => {
     if (isResonanceActive) return;
 
-    let targetAura = { color: '#FDFCFB', intensity: 0.15 }; 
+    let targetAura = { color: '#FDFCFB', intensity: 0.15 };
 
     if (systemSettings.darkModeManual) {
       targetAura = getNightPreset();
@@ -142,7 +142,7 @@ export default function Index() {
   const handleTypewriter = useCallback((fullText: string, onFinish?: () => void) => {
     let currentText = '';
     let index = 0;
-    
+
     // 增加一个辅助状态来承载当前正在展示的消息
     setChatHistory(prev => [...prev, { role: 'assistant', content: '' }]);
 
@@ -151,14 +151,14 @@ export default function Index() {
       setChatHistory(prev => {
         const newHistory = [...prev];
         if (newHistory.length > 0) {
-          newHistory[newHistory.length - 1] = { 
-            ...newHistory[newHistory.length - 1], 
-            content: currentText 
+          newHistory[newHistory.length - 1] = {
+            ...newHistory[newHistory.length - 1],
+            content: currentText
           };
         }
         return newHistory;
       });
-      
+
       index++;
       if (index >= fullText.length) {
         clearInterval(interval);
@@ -174,7 +174,7 @@ export default function Index() {
       setShowTip(true);
       return;
     }
-    
+
     const canStart = await showAd();
     if (!canStart) return;
 
@@ -189,28 +189,28 @@ export default function Index() {
 
     // 并行请求共鸣回响
     const resonancePromise = getResonanceResponse([initialUserMsg], (task) => {
-       requestTaskRef.current = task;
+      requestTaskRef.current = task;
     });
 
     setTimeout(async () => {
       setIsResonanceActive(true);
       setIsTransitioning(false);
       setRoundIndex(1);
-      
+
       try {
         const res = await resonancePromise;
         setVisualState(res.visualTarget);
-        
+
         handleTypewriter(res.text, () => {
           setLoading(false);
           if (res.isFinal) {
-             Taro.showModal({
-               title: '感应圆满',
-               content: '目前的共鸣共振已达巅峰，是否现在凝练灵魂印记？',
-               success: (m) => {
-                 if (m.confirm) handleFinish();
-               }
-             });
+            Taro.showModal({
+              title: '感应圆满',
+              content: '目前的共鸣共振已达巅峰，是否现在凝练灵魂印记？',
+              success: (m) => {
+                if (m.confirm) handleFinish();
+              }
+            });
           }
         });
       } catch (e) {
@@ -287,14 +287,14 @@ export default function Index() {
 
       const history = Taro.getStorageSync('resonance_history') || [];
       Taro.setStorageSync('resonance_history', [newRecord, ...history]);
-      
+
       // 更新共鸣计数
       const count = Taro.getStorageSync('resonance_count') || 0;
       Taro.setStorageSync('resonance_count', count + 1);
 
       Taro.hideLoading();
       Taro.showToast({ title: '印记已镌刻' });
-      
+
       // 重置状态
       setIsResonanceActive(false);
       setChatHistory([]);
@@ -308,7 +308,30 @@ export default function Index() {
   }, [chatHistory]);
 
   const [quote] = useState(() => {
-    const quotes = ['每个当下，都是新的开始。', '听，心跳的节奏。', '呼吸间，世界很静。', '温柔地对待自己。'];
+    const quotes = [
+      '每个当下，都是新的开始。',
+      '听，心跳的节奏。',
+      '呼吸间，世界很静。',
+      '温柔地对待自己。',
+      '万物皆有裂痕，那是光照进来的地方。',
+      '心如止水，波澜不惊。',
+      '于无声处听惊雷，于静谧中见繁花。',
+      '不忧过往，不惧未来。',
+      '生活不是为了赶路，而是为了感悟。',
+      '慢慢来，比较快。',
+      '此刻即永恒。',
+      '放下执念，心自清欢。',
+      '灵魂在安静中盛开。',
+      '每一朵花，都有它开放的季节。',
+      '保持热爱，奔赴山海。',
+      '愿你历经千帆，归来仍是少年。',
+      '所有的相遇，都是久别重逢。',
+      '星光不问赶路人，时光不负有心人。',
+      '心之所向，素履以往。',
+      '浮生若梦，为欢几何。',
+      '静看庭前花开花落。',
+      '去留无意，漫随天外云卷云舒。'
+    ];
     return quotes[Math.floor(Math.random() * quotes.length)];
   });
 
@@ -333,23 +356,23 @@ export default function Index() {
   return (
     <View className={`index ${themeClass}`}>
       {/* 动态背景 */}
-      <ZenBackground 
-        color={themeClass === 'dark-theme' ? '#000000' : visualState.color} 
-        intensity={visualState.intensity} 
-        speed={isResonanceActive ? visualState.flowSpeed : getFlowSpeed()} 
+      <ZenBackground
+        color={themeClass === 'dark-theme' ? '#000000' : visualState.color}
+        intensity={visualState.intensity}
+        speed={isResonanceActive ? visualState.flowSpeed : getFlowSpeed()}
       />
 
       {/* 首页阶段 */}
       {!isResonanceActive && (
         <View className={`index__main ${showTools ? 'pushed' : ''} ${isTransitioning ? 'exiting' : ''}`}>
-           <View className={`index__header ${isTransitioning ? 'mini' : ''}`}>
-              <Text className='quote-text'>{quote}</Text>
-           </View>
+          <View className={`index__header ${isTransitioning ? 'mini' : ''}`}>
+            <Text className='quote-text'>{quote}</Text>
+          </View>
           <View className={`diary-input-card ${isTransitioning ? 'exiting' : ''}`}>
             <View className='card-header'>
-               <Text className='greeting'>你好，最近心情如何？</Text>
+              <Text className='greeting'>你好，最近心情如何？</Text>
             </View>
-            <Textarea 
+            <Textarea
               className='thought-input'
               placeholder='写下第一缕思绪，开启深度共鸣之旅...'
               placeholderStyle='font-size: 32rpx; color: rgba(44, 62, 80, 0.25); line-height: 1.8;'
@@ -362,7 +385,6 @@ export default function Index() {
           <View className='resonance-action'>
             <View className={`resonance-draw-btn ${isButtonActive ? 'active' : ''}`} onClick={() => startResonance()}>
               即时共鸣
-              <View className='btn-effect' />
             </View>
           </View>
         </View>
@@ -376,62 +398,62 @@ export default function Index() {
         <View className='resonance-stage'>
           <View className='index__resonance'>
             <View className='resonance-header-nav'>
-               <View className='back-btn' onClick={() => {
-                  if (chatHistory.length > 0) {
-                    Taro.showModal({
-                      title: '暂时离开',
-                      content: '当前共鸣尚未保存，确定要退出吗？',
-                      success: (res) => {
-                        if (res.confirm) setIsResonanceActive(false);
-                      }
-                    });
-                  } else {
-                    setIsResonanceActive(false);
-                  }
-               }} />
-               {!loading && (
-                 <View className='finish-session-btn' onClick={handleFinish}>
-                    <Text>结束共鸣</Text>
-                 </View>
-               )}
+              <View className='back-btn' onClick={() => {
+                if (chatHistory.length > 0) {
+                  Taro.showModal({
+                    title: '暂时离开',
+                    content: '当前共鸣尚未保存，确定要退出吗？',
+                    success: (res) => {
+                      if (res.confirm) setIsResonanceActive(false);
+                    }
+                  });
+                } else {
+                  setIsResonanceActive(false);
+                }
+              }} />
+              {!loading && (
+                <View className='finish-session-btn' onClick={handleFinish}>
+                  <Text>结束共鸣</Text>
+                </View>
+              )}
             </View>
 
-          <ScrollView 
-            className='chat-scroll' 
-            scrollY 
-            scrollWithAnimation 
-            scrollIntoView={scrollInto}
-            enhanced
-            showScrollbar={false}
-          >
-            <View className='chat-list'>
-              {chatHistory.map((item, idx) => (
-                item.content ? (
-                  <View 
-                    key={idx} 
-                    id={`msg-${idx}`}
-                    className={`chat-bubble ${item.role}`}
-                    onLongPress={() => handleMessageAction(idx, item.content)}
-                  >
-                    <Text className='bubble-text'>{item.content}</Text>
-                  </View>
-                ) : null
-              ))}
-              {loading && (
-                <View className='chat-bubble assistant loading'>
+            <ScrollView
+              className='chat-scroll'
+              scrollY
+              scrollWithAnimation
+              scrollIntoView={scrollInto}
+              enhanced
+              showScrollbar={false}
+            >
+              <View className='chat-list'>
+                {chatHistory.map((item, idx) => (
+                  item.content ? (
+                    <View
+                      key={idx}
+                      id={`msg-${idx}`}
+                      className={`chat-bubble ${item.role}`}
+                      onLongPress={() => handleMessageAction(idx, item.content)}
+                    >
+                      <Text className='bubble-text'>{item.content}</Text>
+                    </View>
+                  ) : null
+                ))}
+                {loading && (
+                  <View className='chat-bubble assistant loading'>
                     <View className='loading-aura'>
                       <Text className='aura-text'>感应中</Text>
                       <View className='aura-dot' />
                     </View>
-                </View>
-              )}
-            </View>
-          </ScrollView>
+                  </View>
+                )}
+              </View>
+            </ScrollView>
 
           </View>
           <View className='user-input-tray'>
             <View className='input-wrapper'>
-              <Textarea 
+              <Textarea
                 className='input-area'
                 placeholder='在此刻，分享你的感悟...'
                 value={thought}
@@ -443,8 +465,8 @@ export default function Index() {
                 cursorSpacing={25}
                 adjustPosition={true}
               />
-              <View 
-                className={`send-trigger ${loading ? 'loading' : (thought.trim() ? 'active' : '')}`} 
+              <View
+                className={`send-trigger ${loading ? 'loading' : (thought.trim() ? 'active' : '')}`}
                 onClick={loading ? stopResonance : handleNextRound}
               >
                 <View className='send-icon' />
@@ -456,25 +478,28 @@ export default function Index() {
 
       {/* 底部功能盘 */}
       {!isResonanceActive && (
-        <View className={`tools-tray ${showTools ? 'expanded' : ''}`}>
-          <View className='tray-handle' onClick={() => setShowTools(!showTools)}>
-            <View className='handle-bar' />
-            <Text className='handle-text'>{showTools ? '回到共鸣' : '共鸣空间表'}</Text>
-          </View>
-          <View className='tools-content'>
-             <View className='tools-tabs'>
+        <>
+          {showTools && <View className='tools-mask' onClick={() => setShowTools(false)} />}
+          <View className={`tools-tray ${showTools ? 'expanded' : ''}`}>
+            <View className='tray-handle' onClick={() => setShowTools(!showTools)}>
+              <View className='handle-bar' />
+              <Text className='handle-text'>{showTools ? '回到共鸣' : '共鸣空间表'}</Text>
+            </View>
+            <View className='tools-content'>
+              <View className='tools-tabs'>
                 <View className={`tool-tab ${mode === 'muyu' ? 'active' : ''}`} onClick={() => setMode('muyu')}>解压律动</View>
                 <View className={`tool-tab ${mode === 'bottle' ? 'active' : ''}`} onClick={() => setMode('bottle')}>情绪瓶子</View>
-             </View>
-             <View className='tool-display'>
+              </View>
+              <View className='tool-display'>
                 <Suspense fallback={null}>
                   {mode === 'muyu' ? <ResonanceRhythm /> : <WishBottle />}
                 </Suspense>
-             </View>
+              </View>
+            </View>
           </View>
-        </View>
+        </>
       )}
-      
+
       <Suspense fallback={null}>
         <ResonanceTip show={showTip} onClose={() => setShowTip(false)} />
       </Suspense>
