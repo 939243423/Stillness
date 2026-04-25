@@ -7,6 +7,7 @@ import { getResonanceResponse, getFinalSoulInsight, SoulInsight } from '../../se
 import { useTabActive } from '../../hooks/useTabActive';
 import AudioService from '../../services/audioService';
 import { useTheme } from '../../hooks/useTheme';
+import { DEFAULT_SYSTEM_SETTINGS, STORAGE_KEY } from '../../constants';
 import './index.scss';
 
 const ResonanceRhythm = lazy(() => import('../../components/ResonanceRhythm').then(m => ({ default: m.ResonanceRhythm })));
@@ -29,15 +30,10 @@ export default function Index() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showTip, setShowTip] = useState(false);
 
-  const [systemSettings, setSystemSettings] = useState({
-    ambientSound: 'rain',
-    flowSpeed: 'normal',
-    darkModeManual: false,
-    darkModeAuto: false
-  });
+  const [systemSettings, setSystemSettings] = useState(DEFAULT_SYSTEM_SETTINGS);
 
   useDidShow(() => {
-    const sysSaved = Taro.getStorageSync('system_settings');
+    const sysSaved = Taro.getStorageSync(STORAGE_KEY.SYSTEM_SETTINGS);
     if (sysSaved) setSystemSettings(prev => ({ ...prev, ...sysSaved }));
 
     // 检查是否有携带过来的共鸣种子

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
+import { STORAGE_KEY } from '../constants';
 
 export function useTheme() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const checkTheme = () => {
-    const settings = Taro.getStorageSync('system_settings');
+    const settings = Taro.getStorageSync(STORAGE_KEY.SYSTEM_SETTINGS);
     if (!settings) return 'light';
 
     if (settings.darkModeManual) {
