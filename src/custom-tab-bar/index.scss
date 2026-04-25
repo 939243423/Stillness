@@ -3,7 +3,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
+  height: 120rpx;
   background: transparent; // 完全透明底
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
@@ -18,38 +18,24 @@
     position: relative;
     padding-top: 10px;
 
-    .tab-icon-mask {
-      width: 52px;
-      height: 52px;
-      margin-bottom: 6px;
-      background-color: #bdc3c7; // 默认灰色
+    .tab-icon {
+      width: 52rpx;
+      height: 52rpx;
+      margin-bottom: 6rpx;
+      flex-shrink: 0;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      
-      &.resonance {
-        -webkit-mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5IiBvcGFjaXR5PSIwLjMiLz48L3N2Zz4=") no-repeat center;
-        mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5IiBvcGFjaXR5PSIwLjMiLz48L3N2Zz4=") no-repeat center;
-        mask-size: contain;
-      }
-      
-      &.mine {
-        -webkit-mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+") no-repeat center;
-        mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+") no-repeat center;
-        mask-size: contain;
-      }
     }
 
     .tab-text {
-      font-size: 20px;
+      font-size: 20rpx;
       color: #bdc3c7;
       font-weight: 300;
-      letter-spacing: 2px;
+      letter-spacing: 2rpx;
     }
 
     &.active {
-      .tab-icon-mask {
-        background-color: #a8d5ba; // 激活色
+      .tab-icon {
         transform: translateY(-4px) scale(1.1);
-        box-shadow: 0 10px 20px rgba(168, 213, 186, 0.2);
       }
       .tab-text {
         color: #a8d5ba;
