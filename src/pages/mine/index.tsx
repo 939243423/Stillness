@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, ScrollView, Button, Input, Image } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
@@ -31,6 +31,7 @@ export default function Mine() {
     avatarUrl: '',
     nickName: '灵魂旅行者'
   });
+  const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(true); // 默认设为true，在DidShow中校验
 
   useTabActive(1);
 
@@ -49,7 +50,24 @@ export default function Mine() {
     if (savedInfo) {
       setUserInfo(savedInfo);
     }
+
+    // 校验隐私授权状态
+    if (Taro.getPrivacySetting) {
+      Taro.getPrivacySetting({
+        success: (res) => {
+          setIsPrivacyAgreed(!res.needAuthorization);
+        }
+      });
+    }
   });
+
+  useEffect(() => {
+    const handleAgreed = () => setIsPrivacyAgreed(true);
+    Taro.eventCenter.on('privacyAgreed', handleAgreed);
+    return () => {
+      Taro.eventCenter.off('privacyAgreed', handleAgreed);
+    };
+  }, []);
 
   const onChooseAvatar = (e) => {
     const { avatarUrl } = e.detail;
@@ -124,19 +142,27 @@ export default function Mine() {
             </View>
           </Button>
           <View className='info-box'>
-            <Input
-              className='nickname-input'
-              type='nickname'
-              value={userInfo.nickName}
-              onFocus={() => {
-                if (Taro.requirePrivacyAuthorize) {
-                  Taro.requirePrivacyAuthorize();
-                }
-              }}
-              onBlur={onNicknameChange}
-              onInput={onNicknameChange}
-              placeholder='输入灵魂昵称'
-            />
+            <View className='nickname-wrapper'>
+              <Input
+                className='nickname-input'
+                type='nickname'
+                value={userInfo.nickName}
+                onBlur={onNicknameChange}
+                onInput={onNicknameChange}
+                placeholder='输入灵魂昵称'
+              />
+              {!isPrivacyAgreed && (
+                <View 
+                  className='privacy-intercept-mask'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (Taro.requirePrivacyAuthorize) {
+                      Taro.requirePrivacyAuthorize();
+                    }
+                  }}
+                />
+              )}
+            </View>
             <Text className='status'>已与自我心旅 {stats.resonance} 次</Text>
           </View>
         </View>

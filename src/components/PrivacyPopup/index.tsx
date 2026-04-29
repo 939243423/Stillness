@@ -52,6 +52,7 @@ export const PrivacyPopup = () => {
 
   const handleAgree = () => {
     setShow(false);
+    Taro.eventCenter.trigger('privacyAgreed');
     if (resolvePrivacyAuthorization) {
       resolvePrivacyAuthorization({ buttonId: 'agree-btn', event: 'agree' });
     }
