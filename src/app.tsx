@@ -1,4 +1,5 @@
 import { Component, PropsWithChildren } from 'react'
+import { PrivacyPopup } from './components/PrivacyPopup'
 import './app.scss'
 
 class App extends Component<PropsWithChildren> {
@@ -7,8 +8,12 @@ class App extends Component<PropsWithChildren> {
   componentDidHide() {}
 
   render() {
-    // Children 是要渲染的页面
-    return this.props.children
+    return (
+      <>
+        {this.props.children}
+        <PrivacyPopup />
+      </>
+    )
   }
 }
 

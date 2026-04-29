@@ -45,4 +45,5 @@ export default defineAppConfig({
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',
+  __usePrivacyCheck__: true,
 })
