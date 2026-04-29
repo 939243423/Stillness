@@ -19,7 +19,7 @@ export default function Terms() {
         <View className='legal-section'>
           <Text className='section-title'>1. 服务说明</Text>
           <Text className='section-text'>
-            “灵魂共鸣”是一款基于共鸣感应技术的感应与情绪回响辅助工具。本服务旨在通过模拟意识回响，协助用户进行自我探索与情绪疏解。请注意，系统感应的内容仅供参考，不构成任何医疗、心理咨询或法律建议。
+            “情绪心旅”是一款基于共鸣感应技术的感应与情绪回响辅助工具。本服务旨在通过模拟意识回响，协助用户进行自我探索与情绪疏解。请注意，系统感应的内容仅供参考，不构成任何医疗、心理咨询或法律建议。
           </Text>
         </View>
 
@@ -45,7 +45,7 @@ export default function Terms() {
         </View>
 
         <View className='legal-footer'>
-          <Text>© 2026 Soul Resonance Team</Text>
+          <Text>© 2026 Mood Trip Team</Text>
         </View>
       </ScrollView>
     </View>

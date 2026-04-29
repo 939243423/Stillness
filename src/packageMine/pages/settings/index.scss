@@ -137,4 +137,32 @@
       }
     }
   }
+
+  // 深度适配暗色模式
+  &.dark-theme {
+    background: #000000;
+    
+    .settings-section {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .option-list {
+      .option-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.05);
+
+        &.active {
+          background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(168, 213, 186, 0.4);
+          
+          .option-label { color: rgba(255, 255, 255, 0.95); }
+        }
+
+        .option-label { color: rgba(255, 255, 255, 0.8); }
+        .option-desc { color: rgba(255, 255, 255, 0.4); }
+        .option-radio { border-color: rgba(255, 255, 255, 0.1); }
+      }
+    }
+  }
 }

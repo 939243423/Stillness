@@ -196,4 +196,45 @@
       }
     }
   }
+
+  // 深度适配暗色模式
+  &.dark-theme {
+    background: #000000;
+    
+    .config-section {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .archetype-grid {
+      .archetype-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.05);
+
+        &.active {
+          background: rgba(168, 213, 186, 0.15);
+          border-color: rgba(168, 213, 186, 0.4);
+          .card-name { color: rgba(255, 255, 255, 0.95); }
+          .card-desc { color: rgba(255, 255, 255, 0.5); }
+        }
+      }
+    }
+
+    .tone-list {
+      .tone-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.05);
+
+        &.active {
+          background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(168, 213, 186, 0.4);
+          .tone-label { color: rgba(255, 255, 255, 0.95); }
+        }
+        
+        .tone-label { color: rgba(255, 255, 255, 0.8); }
+        .tone-desc { color: rgba(255, 255, 255, 0.4); }
+        .tone-radio { border-color: rgba(255, 255, 255, 0.1); }
+      }
+    }
+  }
 }

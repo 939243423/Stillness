@@ -11,6 +11,33 @@
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.3s ease-out;
+
+  // 深度适配暗色模式
+  &.dark-theme {
+    background-color: rgba(0, 0, 0, 0.7);
+
+    .privacy-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 40rpx 100rpx rgba(0, 0, 0, 0.5);
+
+      .privacy-title { color: rgba(255, 255, 255, 0.9); }
+      .privacy-text { color: rgba(255, 255, 255, 0.6); }
+      .privacy-link { color: #a8d5ba; } // 暗色模式下使用品牌绿作为链接色
+
+      .action-btn {
+        &.decline {
+          background: rgba(255, 255, 255, 0.05);
+          color: rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        &.agree {
+          background: #07c160;
+          box-shadow: 0 8rpx 30rpx rgba(7, 193, 96, 0.3);
+        }
+      }
+    }
+  }
 }
 
 .privacy-card {

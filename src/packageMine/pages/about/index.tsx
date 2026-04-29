@@ -10,48 +10,39 @@ export default function About() {
 
   return (
     <View className={`about-page ${themeClass}`}>
-      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.15} speed={0.05} />
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.1} speed={0.04} />
       
       <View className='about-container'>
         <View className='about-hero'>
           <View className='logo-box'>
-            <View className='logo-aura' />
-            <Text className='logo-icon'>🌿</Text>
+            <View className='logo-glow' />
+            <Text className='logo-leaf'>🌿</Text>
           </View>
           <Text className='brand-name'>情绪心旅</Text>
-          <Text className='version'>{version}</Text>
+          <Text className='brand-tagline'>静谧 · 洞察 · 归处</Text>
         </View>
 
-        <View className='about-body'>
-          <View className='about-section'>
-            <Text className='section-title'>品牌愿景</Text>
-            <Text className='section-text'>
-              在喧嚣时代，开辟一片纯净的意识岛屿。让隐藏在日常下的情绪频率得以被看见、被回响。
-            </Text>
+        <View className='about-content-grid'>
+          <View className='about-item'>
+            <Text className='item-label'>品牌愿景</Text>
+            <Text className='item-desc'>于喧嚣中，觅得一处意识岛屿。</Text>
           </View>
-
-          <View className='about-section'>
-            <Text className='section-title'>心旅哲学</Text>
-            <Text className='section-text'>
-              搭载温情的回响机制。不提供教条建议，而是通过细腻的情感捕捉，辅助您完成深度的自我洞察。
-            </Text>
+          <View className='about-item'>
+            <Text className='item-label'>心旅哲学</Text>
+            <Text className='item-desc'>不提供建议，只为您回响真实的内心。</Text>
           </View>
-
-          <View className='about-section'>
-            <Text className='section-title'>隐私安全</Text>
-            <Text className='section-text'>
-              心绪弥足珍贵。所有对话端到端加密，承诺永不存储任何可识别个人身份的原始文本。
-            </Text>
+          <View className='about-item'>
+            <Text className='item-label'>隐私声明</Text>
+            <Text className='item-desc'>思绪端到端加密，永不存储个人私密文本。</Text>
           </View>
         </View>
 
         <View className='about-footer'>
-          <View className='legal-links'>
-            <Text className='link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/terms' })}>服务协议</Text>
-            <View className='dot' />
-            <Text className='link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/privacy' })}>隐私政策</Text>
+          <View className='footer-nav'>
+            <Text className='nav-link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/terms' })}>服务协议</Text>
+            <Text className='nav-link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/privacy' })}>隐私政策</Text>
           </View>
-          <Text className='copyright'>© 2026 Mood Trip Team</Text>
+          <Text className='version-info'>VERSION {version} · MOOD TRIP</Text>
         </View>
       </View>
     </View>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text, Button } from '@tarojs/components';
+import { useTheme } from '../../hooks/useTheme';
 import './index.scss';
 
 // 全局标记，确保在小程序本次运行期间只主动检查一次
@@ -9,6 +10,7 @@ let hasProactiveChecked = false;
 export const PrivacyPopup = () => {
   const [show, setShow] = useState(false);
   const [resolvePrivacyAuthorization, setResolvePrivacyAuthorization] = useState<any>(null);
+  const themeClass = useTheme();
 
   useEffect(() => {
     // 1. 主动检查：结合 getPrivacySetting 和 requirePrivacyAuthorize
@@ -76,7 +78,7 @@ export const PrivacyPopup = () => {
   if (!show) return null;
 
   return (
-    <View className='privacy-popup-overlay'>
+    <View className={`privacy-popup-overlay ${themeClass}`}>
       <View className='privacy-card'>
         <View className='privacy-header'>
           <Text className='privacy-title'>用户隐私保护提示</Text>

@@ -19,14 +19,14 @@ export default function Privacy() {
         <View className='legal-section'>
           <Text className='section-title'>1. 数据收集</Text>
           <Text className='section-text'>
-            我们深知隐私的重要性。本应用坚持“极简数据”原则：除了出于为您提供回响体验所必须的即时输入内容外，我们不会主动收集您的手机号、地理位置或联系人等敏感隐私信息。
+            本服务无需注册即可使用。我们仅在必要时获取微信公开的基础信息（头像、昵称），用于为您提供个性化的心旅体验。所有感应文本仅在内存中处理用于回响生成，我们承诺不进行持久化存储或第三方共享。我们不会主动收集您的手机号、地理位置或联系人等敏感隐私信息。
           </Text>
         </View>
 
         <View className='legal-section'>
           <Text className='section-title'>2. 信息处理与加密</Text>
           <Text className='section-text'>
-            您在“共鸣感应”中输入的文本，会立即同步至共鸣中枢进行处理。整个传输路径均经过端到端 SSL 加密。系统在生成回响后，会采取脱敏技术处理即时对话缓存。
+            “情绪心旅”极度重视您的个人信息安全。我们承诺采用行业领先的加密技术（端到端加密），确保您的感应记录及对话内容在传输与处理过程中的绝对私密。系统在生成回响后，会采取脱敏技术处理即时对话缓存。
           </Text>
         </View>
 
@@ -45,7 +45,7 @@ export default function Privacy() {
         </View>
 
         <View className='legal-footer'>
-          <Text>© 2026 Soul Resonance Team</Text>
+          <Text>© 2026 Mood Trip Team</Text>
         </View>
       </ScrollView>
     </View>
