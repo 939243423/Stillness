@@ -3,7 +3,11 @@ import Taro from '@tarojs/taro';
 import { View, Text, Canvas } from '@tarojs/components';
 import './index.scss';
 
-const RESONANCE_TEXTS = ['宁静', '共鸣', '律动', '感应', '温柔', '回响'];
+const RESONANCE_TEXTS = [
+  '宁静', '共鸣', '律动', '感应', '温柔', '回响',
+  '启迪', '觉醒', '纯净', '归一', '绽放', '灵感',
+  '喜悦', '空灵', '澄澈'
+];
 
 export const ResonanceRhythm = () => {
   const [scale, setScale] = useState(1);
@@ -46,7 +50,9 @@ export const ResonanceRhythm = () => {
 
     const id = Date.now();
     const text = RESONANCE_TEXTS[Math.floor(Math.random() * RESONANCE_TEXTS.length)];
-    setFloatings((prev) => [...prev, { id, x: clientX, y: clientY - 80, text }]);
+    // 将起始 y 坐标大幅上移，并增加随机水平偏移
+    const randomX = (Math.random() - 0.5) * 60;
+    setFloatings((prev) => [...prev, { id, x: clientX + randomX, y: clientY - 250, text }]);
     setTimeout(() => {
       if (!isUnmounted.current) {
         setFloatings((prev) => prev.filter((f) => f.id !== id));

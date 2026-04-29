@@ -1,7 +1,19 @@
 import { useState, useCallback, useEffect } from 'react';
 import Taro from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
+import { View, Text, Image } from '@tarojs/components';
 import './index.scss';
+
+// SVG Assets
+const ICONS = {
+  resonance: {
+    inactive: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjYiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiIG9wYWNpdHk9IjAuMyIvPjwvc3ZnPg==',
+    active: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjYiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiIG9wYWNpdHk9IjAuMyIvPjwvc3ZnPg=='
+  },
+  mine: {
+    inactive: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRjM2M3IiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRIOGE0IDQgMCAwIDAtNCA0djIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiLz48L3N2Zz4=',
+    active: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYThkNWJhIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRIOGE0IDQgMCAwIDAtNCA0djIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiLz48L3N2Zz4='
+  }
+};
 
 export default function CustomTabBar() {
   const [selected, setSelected] = useState(0);
@@ -10,14 +22,12 @@ export default function CustomTabBar() {
     {
       pagePath: '/pages/index/index',
       text: '共鸣',
-      // iconPath: '../assets/images/tab-resonance.png',
-      // selectedIconPath: '../assets/images/tab-resonance-active.png'
+      key: 'resonance'
     },
     {
       pagePath: '/pages/mine/index',
       text: '我的',
-      // iconPath: '../assets/images/tab-mine.png',
-      // selectedIconPath: '../assets/images/tab-mine-active.png'
+      key: 'mine'
     }
   ];
 
@@ -55,7 +65,11 @@ export default function CustomTabBar() {
           className={`tab-item ${selected === index ? 'active' : ''}`}
           onClick={() => switchTab(index, item.pagePath)}
         >
-          <View className={`tab-icon-mask ${index === 0 ? 'resonance' : 'mine'}`} />
+          <Image 
+            className='tab-icon' 
+            mode='aspectFit'
+            src={selected === index ? ICONS[item.key].active : ICONS[item.key].inactive} 
+          />
           <Text className='tab-text'>{item.text}</Text>
         </View>
       ))}

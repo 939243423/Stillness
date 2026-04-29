@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../../components/ZenBackground';
 import { useTheme } from '../../../hooks/useTheme';
+import { DEFAULT_SYSTEM_SETTINGS, STORAGE_KEY } from '../../../constants';
 import './index.scss';
 
 const SOUNDS = [
@@ -20,15 +21,10 @@ const SPEEDS = [
 
 export default function Settings() {
   const themeClass = useTheme();
-  const [settings, setSettings] = useState({
-    ambientSound: 'off',
-    flowSpeed: 'normal',
-    darkModeManual: false,
-    darkModeAuto: false,
-  });
+  const [settings, setSettings] = useState(DEFAULT_SYSTEM_SETTINGS);
 
   useEffect(() => {
-    const saved = Taro.getStorageSync('system_settings');
+    const saved = Taro.getStorageSync(STORAGE_KEY.SYSTEM_SETTINGS);
     if (saved) {
       setSettings(prev => ({
         ...prev,
@@ -39,7 +35,7 @@ export default function Settings() {
 
   const saveSettings = (newSettings: typeof settings) => {
     setSettings(newSettings);
-    Taro.setStorageSync('system_settings', newSettings);
+    Taro.setStorageSync(STORAGE_KEY.SYSTEM_SETTINGS, newSettings);
     Taro.vibrateShort({ type: 'medium' });
     Taro.showToast({ title: '系统设置已更新', icon: 'success' });
   };

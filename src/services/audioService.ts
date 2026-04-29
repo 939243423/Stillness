@@ -14,15 +14,21 @@ class AudioService {
 
   private constructor() {
     if (process.env.TARO_ENV !== 'h5') {
-       this.ctx = Taro.createInnerAudioContext();
-       this.ctx.loop = true;
-       this.ctx.volume = 0.5;
-       
-       this.ctx.onError((res) => {
-         console.error('[AudioService] Error:', res);
-         Taro.showToast({ title: '氛围音加载失败，请检查网络或路径', icon: 'none' });
-         this.currentType = null;
-       });
+      this.ctx = Taro.createInnerAudioContext();
+      this.ctx.loop = true;
+      this.ctx.volume = 0.5;
+      this.ctx.autoplay = false; // 显式关闭自动播放，由代码控制
+      this.ctx.obeyMuteSwitch = false;
+
+      Taro.setInnerAudioOption({
+        obeyMuteSwitch: false,
+        mixWithOther: true,
+      });
+
+      this.ctx.onError((res) => {
+        console.error('[AudioService] Error:', res);
+        this.currentType = null;
+      });
     }
   }
 
@@ -34,16 +40,35 @@ class AudioService {
   }
 
   public play(type: string) {
-    if (!this.ctx || !SOUND_SOURCES[type]) return;
-    
-    if (this.currentType === type && !this.ctx.paused) return;
+    if (!this.ctx || !SOUND_SOURCES[type]) {
+      console.warn(`[AudioService] Invalid type or ctx missing: ${type}`);
+      return;
+    }
+
+    // 如果已经在播放同类型，则不重复操作
+    if (this.currentType === type && !this.ctx.paused) {
+      console.log(`[AudioService] Already playing: ${type}`);
+      return;
+    }
 
     try {
       this.ctx.stop();
       this.ctx.src = SOUND_SOURCES[type];
+
+      // 在 iOS 上，直接调用 play() 可能会因为还没加载完而失效
+      // 监听 canplay 事件确保资源就绪
+      const onCanplay = () => {
+        this.ctx?.play();
+        this.ctx?.offCanplay(onCanplay);
+      };
+
+      this.ctx.onCanplay(onCanplay);
+
+      // 同时显式调用一次 play 以触发缓冲（部分版本需要）
       this.ctx.play();
+
       this.currentType = type;
-      console.log(`[AudioService] Attempting to play: ${type}`);
+      console.log(`[AudioService] Loading and attempting to play: ${type}`);
     } catch (e) {
       console.error('[AudioService] Play exception:', e);
     }
@@ -52,8 +77,9 @@ class AudioService {
   public stop() {
     if (this.ctx) {
       this.ctx.stop();
+      this.ctx.src = ''; // 清除 src 释放资源
       this.currentType = null;
-      console.log(`[AudioService] Stopped`);
+      console.log(`[AudioService] Stopped and cleared src`);
     }
   }
 
