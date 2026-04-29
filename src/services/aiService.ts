@@ -1,182 +1,117 @@
 import Taro from '@tarojs/taro';
 
-const SILICON_KEY = 'sk-grregxjdqfcoutmccnxxtkuqingipcosydblwiyefekktdcr';
-const ANYWHERE_KEY = 'sk-S73C9wvuIIwDK2K9wbhAlS9gl4rfjVM3rCt99GTwmXJbUOSo';
-
-const SILICON_URL = 'https://api.siliconflow.cn/v1/chat/completions';
-const ANYWHERE_URL = 'https://api.chatanywhere.tech/v1/chat/completions';
+/**
+ * 灵魂共鸣 AI 服务 (云开发版)
+ * 已移除本地 API Key，统一通过云函数 SILICON_KEY 进行中转请求
+ */
 
 export interface SoulInsight {
-  archetype: string;        // 灵魂原型，如 '星辰编织者'
-  energyColor: string;      // 能量色 hex, 如 '#A8D5BA'
-  vibeTags: string[];       // 氛围标签，如 ['#安静的爆发', '#以柔克刚']
-  echo: string;             // 灵魂回响 (原诗词)
-  insight: string;          // 深层洞察 (原建议)
-  decode: string;          // 深度感应 (原 response)
-  spiritId: string;        // 唯一灵魂编码，如 'SN-2024'
+  archetype: string;
+  energyColor: string;
+  vibeTags: string[];
+  echo: string;
+  insight: string;
+  decode: string;
+  spiritId: string;
 }
 
 export interface ResonanceResponse {
-  text: string;            // 共鸣师的回应
-  visualTarget: {          // 背景演化指令
-    color: string;         // 目标颜色 hex
-    intensity: number;     // 光影强度 0-1
-    flowSpeed: number;     // 流动速度 0-1
+  text: string;
+  visualTarget: {
+    color: string;
+    intensity: number;
+    flowSpeed: number;
   };
-  roundScore: number;      // 当前共鸣深度 0-100
-  isFinal: boolean;        // 是否达到终章
+  roundScore: number;
+  isFinal: boolean;
 }
 
 /**
- * 10轮沉浸式心灵理疗对话
+ * 核心：调用云函数进行 AI 感应
+ */
+const callAiCloud = async (messages: any[], useAnywhere: boolean = false): Promise<any> => {
+  const res = await Taro.cloud.callFunction({
+    name: 'SILICON_KEY',
+    data: {
+      messages,
+      useAnywhere,
+      model: useAnywhere ? 'gpt-3.5-turbo' : 'deepseek-ai/DeepSeek-V3'
+    }
+  });
+
+  const result = res.result as any;
+  if (!result || !result.success) {
+    throw new Error(result?.error || '云端感应频率失联');
+  }
+
+  let content = result.data.choices[0].message.content;
+  // 清理可能存在的 markdown 标记
+  content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+  return JSON.parse(content);
+};
+
+/**
+ * 获取即时共鸣回响
  */
 export const getResonanceResponse = async (
   messages: { role: 'user' | 'assistant', content: string }[],
-  onTask?: (task: Taro.RequestTask<any>) => void
+  _onTask?: (task: any) => void
 ): Promise<ResonanceResponse> => {
   const config = Taro.getStorageSync('resonance_config') || {
     archetype: '温暖感应者',
-    tone: '温和委婉',
-    coreMemory: 'continuous'
+    tone: '温和委婉'
   };
-
-  let strategyInstruction = '';
-  if (config.archetype === '赛博修行者') {
-    strategyInstruction = '回应必须极其简短（15字以内），类似禅语，富于意境。';
-  } else if (config.archetype === '森林德鲁伊') {
-    strategyInstruction = '从哲学或心理学深度拆解用户的每一个情绪细节，给予富有智慧的洞察建议。';
-  } else if (config.archetype === '寂静观察者') {
-    strategyInstruction = '不要输出任何文字回应。请将 "text" 字段设为空字符串 ""。通过 visualTarget 的演化来回应用户的灵魂波动。';
-  }
 
   const systemPrompt = `你是一位游历于意识边缘的“灵魂共鸣师”。
     当前感应频率：${config.archetype} (${config.tone})。
-    ${strategyInstruction}
-    你的任务：
-    1. 捕捉用户言语背后的情绪波音，给予空灵、简约且具哲学深度的共鸣。
-    2. 避免任何AI式陈述，使用具象化的意象（如：微光、尘埃、潮汐、回响）。
-    3. 引导用户向内观察，不仅是回应，更是启迪。
-    
-    请严格按以下 JSON 格式回应，严禁包含任何 Markdown 格式：
+    请捕捉用户言语背后的情绪波音，给予空灵、简约且具哲学深度的共鸣。
+    请严格按以下 JSON 格式回应：
     {
       "text": "此处为你的共鸣回响",
       "visualTarget": {"color": "建议背景色hex", "intensity": 0-1, "flowSpeed": 0-1},
-      "roundScore": 0-100, // 共鸣深度评分
-      "isFinal": false // 若感应已圆满，可设为 true 开启终章
+      "roundScore": 0-100,
+      "isFinal": false
     }`;
 
-  // 处理记忆模式
-  const finalMessages = config.coreMemory === 'instant' 
-    ? [messages[messages.length - 1]] 
-    : messages;
-
-  const requestModel = async (
-    model: string, 
-    timeout: number, 
-    config?: { url?: string; key?: string }
-  ): Promise<ResonanceResponse> => {
-    const task = Taro.request({
-      url: config?.url || SILICON_URL,
-      method: 'POST',
-      timeout,
-      header: {
-        'Authorization': `Bearer ${config?.key || SILICON_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      data: {
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...finalMessages
-        ],
-        response_format: { type: 'json_object' },
-        enable_thinking: false,
-        max_tokens: 1024
-      }
-    });
-
-    if (onTask) onTask(task);
-    const response = await task;
-
-    if (response.statusCode === 200) {
-      let content = response.data.choices[0].message.content;
-      content = content.replace(/```json/g, '').replace(/```/g, '').trim();
-      return JSON.parse(content);
-    } else {
-      throw new Error(`API Status ${response.statusCode}`);
-    }
-  };
+  const finalMessages = [{ role: 'system', content: systemPrompt }, ...messages];
 
   try {
-    // 1. 优先使用 Qwen (6s) - SiliconFlow
-    return await requestModel('Qwen/Qwen3.6-35B-A3B', 6000);
+    // 优先尝试 SiliconFlow (DeepSeek)
+    return await callAiCloud(finalMessages, false);
   } catch (error) {
-    if (error.errMsg?.includes('abort')) throw error;
-    
-    console.warn('Qwen 响应慢或失败，切换至 MiniMax (6s) - SiliconFlow...');
+    console.warn('SiliconFlow 响应异常，尝试备选节点...', error);
     try {
-      // 2. 备选 MiniMax (6s) - SiliconFlow
-      return await requestModel('Pro/MiniMaxAI/MiniMax-M2.5', 6000);
+      // 备选节点 (ChatAnywhere)
+      return await callAiCloud(finalMessages, true);
     } catch (fallbackError) {
-      if (fallbackError.errMsg?.includes('abort')) throw fallbackError;
-      
-      console.warn('MiniMax 响应慢或失败，切换至 GPT (6s) - ChatAnywhere...');
-      try {
-        // 3. 最终备选 GPT-5-nano (6s) - ChatAnywhere 节点
-        return await requestModel('gpt-5-nano', 6000, { 
-          url: ANYWHERE_URL, 
-          key: ANYWHERE_KEY 
-        });
-      } catch (finalError) {
-        if (finalError.errMsg?.includes('abort')) throw finalError;
-        
-        console.error('所有模型均感应失败，返回兜底话术');
-        return {
-          text: '感应到你的思绪正在流动。再多分享一点，我一直在听。',
-          visualTarget: { color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 },
-          roundScore: 10,
-          isFinal: false
-        };
-      }
+      console.error('所有模型均感应失败');
+      return {
+        text: '感应到你的思绪正在流动。再多分享一点，我一直在听。',
+        visualTarget: { color: '#FDFCFB', intensity: 0.3, flowSpeed: 0.2 },
+        roundScore: 10,
+        isFinal: false
+      };
     }
   }
 };
 
 /**
- * 最终灵魂画像生成 (在第10轮后调用)
+ * 最终灵魂画像生成
  */
 export const getFinalSoulInsight = async (history: any[]): Promise<SoulInsight> => {
+  const prompt = `基于整场灵魂对话的历史记录，为用户生成最终的灵魂画像内容。请严格按照以下 JSON 回复：
+  {
+    "archetype": "灵魂原型名称",
+    "energyColor": "能量色hex",
+    "vibeTags": ["标签1", "标签2"],
+    "echo": "结论性回响描述",
+    "insight": "成长洞察",
+    "decode": "深度总结",
+    "spiritId": "SN-XXXX"
+  }`;
+
   try {
-    const response = await Taro.request({
-      url: SILICON_URL,
-      method: 'POST',
-      header: {
-        'Authorization': `Bearer ${SILICON_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      data: {
-        model: 'Pro/MiniMaxAI/MiniMax-M2.5',
-        messages: [
-          {
-            role: 'system',
-            content: `基于整场灵魂对话的历史记录，为用户生成最终的灵魂画像内容。
-请严格按照以下 JSON 回复（严禁出现宗教、修行或迷信色彩词汇）：
-{
-  "archetype": "灵魂原型名称",
-  "energyColor": "能量色hex",
-  "vibeTags": ["氛围标签"],
-  "echo": "结论性回响描述",
-  "insight": "成长洞察",
-  "decode": "深度总结",
-  "spiritId": "SN-XXXX"
-}`
-          },
-          ...history
-        ],
-        response_format: { type: 'json_object' }
-      }
-    });
-    return JSON.parse(response.data.choices[0].message.content);
+    return await callAiCloud([...history, { role: 'user', content: prompt }], false);
   } catch (e) {
     return {
       archetype: '寂静之山',
