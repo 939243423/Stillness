@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { View, Text, ScrollView } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { useTheme } from '../../../hooks/useTheme';
 import { ZenBackground } from '../../../components/ZenBackground';
 import './index.scss';
@@ -10,49 +10,50 @@ export default function About() {
 
   return (
     <View className={`about-page ${themeClass}`}>
-      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.15} speed={0.1} />
+      <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.15} speed={0.05} />
       
-      <ScrollView className='about-content' scrollY showScrollbar={false} enhanced>
+      <View className='about-container'>
         <View className='about-hero'>
-          <View className='logo-placeholder'>✨</View>
-          <Text className='brand-name'>灵魂共鸣</Text>
+          <View className='logo-box'>
+            <View className='logo-aura' />
+            <Text className='logo-icon'>🌿</Text>
+          </View>
+          <Text className='brand-name'>情绪心旅</Text>
           <Text className='version'>{version}</Text>
         </View>
 
-        <View className='about-section'>
-          <View className='section-header'>
+        <View className='about-body'>
+          <View className='about-section'>
             <Text className='section-title'>品牌愿景</Text>
+            <Text className='section-text'>
+              在喧嚣时代，开辟一片纯净的意识岛屿。让隐藏在日常下的情绪频率得以被看见、被回响。
+            </Text>
           </View>
-          <Text className='section-text'>
-            在喧嚣的数字时代，我们致力于为每一位行者开辟一片纯净的意识岛屿。通过深度感应技术，让隐藏在琐碎日常下的灵魂频率得以被看见、被回响。
-          </Text>
-        </View>
 
-        <View className='about-section'>
-          <View className='section-header'>
-            <Text className='section-title'>技术哲学</Text>
+          <View className='about-section'>
+            <Text className='section-title'>心旅哲学</Text>
+            <Text className='section-text'>
+              搭载温情的回响机制。不提供教条建议，而是通过细腻的情感捕捉，辅助您完成深度的自我洞察。
+            </Text>
           </View>
-          <Text className='section-text'>
-            “灵魂共鸣” 搭载了先进的感应回响机制。它不提供教条式的建议，而是通过对文字张力与情感深度的捕捉，模拟出最契合用户当下的意识回响，辅助用户完成自我洞察。
-          </Text>
-        </View>
 
-        <View className='about-section'>
-          <View className='section-header'>
+          <View className='about-section'>
             <Text className='section-title'>隐私安全</Text>
+            <Text className='section-text'>
+              心绪弥足珍贵。所有对话端到端加密，承诺永不存储任何可识别个人身份的原始文本。
+            </Text>
           </View>
-          <Text className='section-text'>
-            您的每一缕思绪都极为珍贵。所有的对话数据均经过端到端加密处理，仅用于为您生成动态的共鸣反馈，我们承诺永不存储任何可识别个人身份的原始文本。
-          </Text>
         </View>
 
         <View className='about-footer'>
-          <Text className='footer-link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/terms' })}>服务协议</Text>
-          <View className='divider' />
-          <Text className='footer-link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/privacy' })}>隐私政策</Text>
-          <View className='copyright'>© 2026 Soul Resonance Team</View>
+          <View className='legal-links'>
+            <Text className='link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/terms' })}>服务协议</Text>
+            <View className='dot' />
+            <Text className='link' onClick={() => Taro.navigateTo({ url: '/packageMine/pages/about/privacy' })}>隐私政策</Text>
+          </View>
+          <Text className='copyright'>© 2026 Mood Trip Team</Text>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }

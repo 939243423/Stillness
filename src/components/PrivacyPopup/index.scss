@@ -15,11 +15,11 @@
 
 .privacy-card {
   width: 600rpx;
-  background: var(--bg-color);
+  background: #ffffff;
   border-radius: 32rpx;
   padding: 48rpx;
   box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--card-border);
+  border: 1px solid #eeeeee;
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -33,7 +33,7 @@
 .privacy-title {
   font-size: 36rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #333333;
   letter-spacing: 2rpx;
 }
 
@@ -44,7 +44,7 @@
 .privacy-text {
   font-size: 28rpx;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: #666666;
   text-align: justify;
 }
 
@@ -79,9 +79,9 @@
   }
 
   &.decline {
-    background: var(--glass-bg);
-    color: var(--text-secondary);
-    border: 1px solid var(--glass-border);
+    background: #f5f5f5;
+    color: #999999;
+    border: 1px solid #eeeeee;
   }
 
   &.agree {

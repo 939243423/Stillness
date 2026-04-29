@@ -1,101 +1,165 @@
 .guide-page {
   width: 100vw;
-  min-height: 100vh;
-  position: relative;
-  background: var(--bg-color);
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: background 0.5s ease;
+  padding: 0 48rpx;
+  box-sizing: border-box;
+  position: relative;
 
   .guide-header {
-    padding: 120px 60px 60px;
+    padding-top: 120rpx;
+    padding-bottom: 60rpx;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    align-items: center;
+    animation: fadeInDown 0.8s ease-out;
 
     .title {
-      font-size: 48px;
-      font-weight: 500;
+      font-size: 44rpx;
+      font-weight: 600;
       color: var(--text-primary);
-      letter-spacing: 6px;
+      letter-spacing: 4rpx;
+      margin-bottom: 16rpx;
     }
+
+    .title-line {
+      width: 40rpx;
+      height: 4rpx;
+      background: linear-gradient(90deg, transparent, var(--text-secondary), transparent);
+      margin-bottom: 20rpx;
+    }
+
     .subtitle {
-      font-size: 24px;
+      font-size: 24rpx;
       color: var(--text-secondary);
-      font-weight: 300;
-      letter-spacing: 4px;
+      letter-spacing: 2rpx;
+      opacity: 0.8;
       text-transform: uppercase;
     }
   }
 
-  .guide-content {
+  .guide-main {
     flex: 1;
-    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 32rpx;
+    padding-bottom: 40rpx;
+  }
 
-    .guide-card {
-      position: relative;
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 60px 40px;
-      border-radius: 40px;
-      margin-bottom: 40px;
-      border: 1px solid var(--card-border);
-      overflow: hidden;
+  .guide-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 32rpx;
+    padding: 32rpx;
+    display: flex;
+    align-items: flex-start;
+    gap: 28rpx;
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.03);
+    animation: fadeInUp 0.8s ease-out both;
 
-      .card-icon-bg {
-        position: absolute;
-        right: -20px;
-        top: -20px;
-        font-size: 160px;
-        opacity: 0.05;
-        transform: rotate(15deg);
-        pointer-events: none;
-      }
-
-      .card-main {
-        position: relative;
-        z-index: 10;
-
-        .card-title-group {
-          margin-bottom: 30px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-
-          .card-title {
-            font-size: 32px;
-            font-weight: 500;
-            color: var(--text-primary);
-            letter-spacing: 2px;
-          }
-          .card-sub {
-            font-size: 20px;
-            color: #a8d5ba;
-            letter-spacing: 4px;
-            font-weight: 600;
-          }
-        }
-
-        .card-content {
-          font-size: 26px;
-          color: #7f8c8d;
-          line-height: 1.8;
-          font-weight: 300;
-          text-align: justify;
-        }
+    @for $i from 1 through 3 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.15}s;
       }
     }
 
-    .guide-footer {
-      padding: 60px 0 120px;
-      text-align: center;
-      .footer-text {
-        font-size: 24px;
-        color: #bdc3c7;
-        letter-spacing: 8px;
-        font-weight: 300;
+    .card-icon-box {
+      width: 80rpx;
+      height: 80rpx;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40rpx;
+      box-shadow: inset 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+    }
+
+    .card-body {
+      flex: 1;
+
+      .card-header-inner {
+        margin-bottom: 12rpx;
+        display: flex;
+        flex-direction: column;
+
+        .card-title {
+          font-size: 30rpx;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: 4rpx;
+        }
+
+        .card-sub {
+          font-size: 18rpx;
+          color: var(--text-secondary);
+          opacity: 0.5;
+          letter-spacing: 1rpx;
+        }
+      }
+
+      .card-content {
+        font-size: 26rpx;
+        line-height: 1.6;
+        color: var(--text-secondary);
+        text-align: justify;
       }
     }
   }
+
+  .guide-footer {
+    padding-bottom: 80rpx;
+    text-align: center;
+    animation: fadeIn 1.2s ease-in;
+
+    .footer-tag {
+      font-size: 22rpx;
+      color: var(--text-secondary);
+      opacity: 0.4;
+      font-style: italic;
+    }
+  }
+}
+
+// 适配暗色模式
+.dark-theme {
+  .guide-card {
+    background: rgba(20, 20, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.2);
+
+    .card-icon-box {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

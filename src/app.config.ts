@@ -41,7 +41,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: '灵魂共鸣',
+    navigationBarTitleText: '情绪心旅',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',

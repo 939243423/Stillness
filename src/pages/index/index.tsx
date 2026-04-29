@@ -9,6 +9,7 @@ import AudioService from '../../services/audioService';
 import { useTheme } from '../../hooks/useTheme';
 import { isNightTime } from '../../utils';
 import { DEFAULT_SYSTEM_SETTINGS, STORAGE_KEY } from '../../constants';
+import { PageLayout } from '../../components/PageLayout';
 import './index.scss';
 
 const ResonanceRhythm = lazy(() => import('../../components/ResonanceRhythm').then(m => ({ default: m.ResonanceRhythm })));
@@ -346,7 +347,8 @@ export default function Index() {
   const themeClass = useTheme();
 
   return (
-    <View className={`index ${themeClass}`}>
+    <PageLayout>
+      <View className={`index ${themeClass}`}>
       {/* 动态背景 */}
       <ZenBackground
         color={themeClass === 'dark-theme' ? '#000000' : visualState.color}
@@ -496,5 +498,6 @@ export default function Index() {
         <ResonanceTip show={showTip} onClose={() => setShowTip(false)} />
       </Suspense>
     </View>
+    </PageLayout>
   );
 }

@@ -4,6 +4,7 @@ import { View, Text, ScrollView, Button, Input, Image } from '@tarojs/components
 import { ZenBackground } from '../../components/ZenBackground';
 import { useTabActive } from '../../hooks/useTabActive';
 import { useTheme } from '../../hooks/useTheme';
+import { PageLayout } from '../../components/PageLayout';
 import './index.scss';
 
 // SVG Assets for Mine Page
@@ -77,11 +78,11 @@ export default function Mine() {
 
   const handleItemClick = (title: string) => {
     const routes: Record<string, string> = {
-      '我的共鸣历史': '/packageMine/pages/trace/index',
-      '共鸣空间配置': '/packageMine/pages/config/index',
+      '我的心旅历史': '/packageMine/pages/trace/index',
+      '心旅空间配置': '/packageMine/pages/config/index',
       '系统设置': '/packageMine/pages/settings/index',
-      '灵魂感应手册': '/packageMine/pages/guide/index',
-      '关于灵魂共鸣': '/packageMine/pages/about/index'
+      '情绪感应手册': '/packageMine/pages/guide/index',
+      '关于情绪心旅': '/packageMine/pages/about/index'
     };
     if (routes[title]) {
       Taro.navigateTo({ url: routes[title] });
@@ -91,15 +92,16 @@ export default function Mine() {
   };
 
   const menuItems = [
-    { title: '我的共鸣历史', icon: MINE_ICONS.history },
-    { title: '共鸣空间配置', icon: MINE_ICONS.config },
+    { title: '我的心旅历史', icon: MINE_ICONS.history },
+    { title: '心旅空间配置', icon: MINE_ICONS.config },
     { title: '系统设置', icon: MINE_ICONS.settings },
-    { title: '灵魂感应手册', icon: MINE_ICONS.guide },
-    { title: '关于灵魂共鸣', icon: MINE_ICONS.about },
+    { title: '情绪感应手册', icon: MINE_ICONS.guide },
+    { title: '关于情绪心旅', icon: MINE_ICONS.about },
   ];
 
   return (
-    <View className={`mine-page ${themeClass}`}>
+    <PageLayout>
+      <View className={`mine-page ${themeClass}`}>
       <ZenBackground color={themeClass === 'dark-theme' ? '#000000' : '#FDFCFB'} intensity={0.2} speed={0.1} />
 
       <ScrollView className='mine-content' scrollY showScrollbar={false} enhanced>
@@ -126,16 +128,21 @@ export default function Mine() {
               className='nickname-input'
               type='nickname'
               value={userInfo.nickName}
+              onFocus={() => {
+                if (Taro.requirePrivacyAuthorize) {
+                  Taro.requirePrivacyAuthorize();
+                }
+              }}
               onBlur={onNicknameChange}
               onInput={onNicknameChange}
               placeholder='输入灵魂昵称'
             />
-            <Text className='status'>已与自我共鸣 {stats.resonance} 次</Text>
+            <Text className='status'>已与自我心旅 {stats.resonance} 次</Text>
           </View>
         </View>
 
         {/* 灵魂数据统计 */}
-        <View className='section-title'>灵魂印记</View>
+        <View className='section-title'>心旅印记</View>
         <View className='stats-grid'>
           {soulInsights.map((item, idx) => (
             <View key={idx} className='stat-card'>
@@ -162,11 +169,12 @@ export default function Mine() {
         <View className='page-footer'>
           <Text className='motto'>万物皆有裂痕，那是光照进来的地方</Text>
           <View className='brand-info'>
-            <Text className='brand-name'>SOUL RESONANCE</Text>
+            <Text className='brand-name'>EMOTIONAL MOOD TRIP</Text>
             <Text className='ver'>v3.0.0 Premium Flow</Text>
           </View>
         </View>
       </ScrollView>
     </View>
+    </PageLayout>
   );
 }

@@ -3,38 +3,49 @@ import Taro from '@tarojs/taro';
 import { View, Text, Button } from '@tarojs/components';
 import './index.scss';
 
+// 全局标记，确保在小程序本次运行期间只主动检查一次
+let hasProactiveChecked = false;
+
 export const PrivacyPopup = () => {
   const [show, setShow] = useState(false);
   const [resolvePrivacyAuthorization, setResolvePrivacyAuthorization] = useState<any>(null);
 
   useEffect(() => {
-    console.log('>>> PrivacyPopup 组件已挂载，开始检查隐私设置');
-
-    // 1. 主动检查：一打开小程序就检查是否需要授权
-    if (Taro.getPrivacySetting) {
+    // 1. 主动检查：结合 getPrivacySetting 和 requirePrivacyAuthorize
+    if (!hasProactiveChecked && Taro.getPrivacySetting) {
+      hasProactiveChecked = true; 
+      
       Taro.getPrivacySetting({
         success: (res) => {
-          console.log('>>> 微信返回隐私状态:', res);
+          console.log('>>> 隐私授权状态查询:', res);
           if (res.needAuthorization) {
-            setShow(true);
+            // 确实需要授权，主动触发拦截
+            if (Taro.requirePrivacyAuthorize) {
+              Taro.requirePrivacyAuthorize();
+            } else {
+              // 降级方案：如果不支持 require 接口，直接弹窗
+              setShow(true);
+            }
           }
-        },
-        fail: (err) => {
-          console.error('>>> 获取隐私设置失败:', err);
-        },
+        }
       });
-    } else {
-      console.warn('>>> 当前基础库不支持 getPrivacySetting');
     }
 
-    // 2. 被动监听：当用户触发敏感 API 时系统自动拦截并触发
+    // 2. 被动监听：实时拦截敏感操作（如 chooseAvatar）
+    let listener: any = null;
     if (Taro.onNeedPrivacyAuthorization) {
-      Taro.onNeedPrivacyAuthorization((resolve) => {
-        console.log('>>> 触发被动隐私拦截');
+      listener = Taro.onNeedPrivacyAuthorization((resolve) => {
+        console.log('>>> 触发隐私拦截');
         setShow(true);
         setResolvePrivacyAuthorization(() => resolve);
       });
     }
+
+    return () => {
+      if (listener && listener.deregister) {
+        listener.deregister();
+      }
+    };
   }, []);
 
   const handleAgree = () => {
