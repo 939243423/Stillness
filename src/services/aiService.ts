@@ -35,7 +35,6 @@ const callAiCloud = async (messages: any[], useAnywhere: boolean = false): Promi
     data: {
       messages,
       useAnywhere,
-      model: useAnywhere ? 'gpt-3.5-turbo' : 'deepseek-ai/DeepSeek-V3'
     }
   });
 
