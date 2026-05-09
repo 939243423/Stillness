@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, lazy, Suspense, useRef } from 'react';
-import Taro, { useDidShow } from '@tarojs/taro';
+import Taro, { useDidShow, useLoad } from '@tarojs/taro';
 import { View, Text, Textarea, ScrollView } from '@tarojs/components';
 import { ZenBackground } from '../../components/ZenBackground';
 import { useRewardAd } from '../../hooks/useRewardAd';
@@ -10,6 +10,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { isNightTime } from '../../utils';
 import { DEFAULT_SYSTEM_SETTINGS, STORAGE_KEY } from '../../constants';
 import { PageLayout } from '../../components/PageLayout';
+import { userApi } from '../../services/user';
 import './index.scss';
 
 const ResonanceRhythm = lazy(() => import('../../components/ResonanceRhythm').then(m => ({ default: m.ResonanceRhythm })));
@@ -300,6 +301,66 @@ export default function Index() {
     }
   }, [chatHistory]);
 
+  const handleScanLogin = async () => {
+    try {
+      Taro.vibrateShort();
+      // 1. 调用微信原生扫码
+      const { result: uuid } = await Taro.scanCode({
+        onlyFromCamera: true,
+        scanType: ['qrCode'],
+      });
+
+      if (!uuid) return;
+
+      // 2. 通知后端“已扫码”，让网页端显示“扫码成功”
+      await userApi.pcLoginScan(uuid);
+
+      // 3. 弹出确认框
+      const { confirm } = await Taro.showModal({
+        title: 'PC 端登录确认',
+        content: '确定要在 PC 端浏览器登录您的 OneGPT+ 账号吗？',
+        confirmText: '立即授权',
+        confirmColor: '#a855f7',
+        cancelText: '取消',
+      });
+
+      if (confirm) {
+        Taro.showLoading({ title: '正在授权...' });
+        // 获取当前小程序的登录 code
+        const { code } = await Taro.login();
+        // 4. 调用后端确认接口，完成授权
+        await userApi.confirmPCLogin(code, uuid);
+        
+        Taro.hideLoading();
+        Taro.showToast({ title: '授权成功', icon: 'success' });
+      }
+    } catch (err) {
+      console.error('扫码登录失败', err);
+      Taro.showToast({ title: '授权取消或失败', icon: 'none' });
+    }
+  };
+
+  // 处理 PC 端扫码登录进入 (小程序码场景)
+  useLoad((options) => {
+    // 微信小程序码的参数在 scene 中
+    const scene = options.scene ? decodeURIComponent(options.scene) : null;
+    if (scene) {
+      // 自动触发扫码逻辑
+      userApi.pcLoginScan(scene).catch(console.error);
+      Taro.showModal({
+        title: '登录确认',
+        content: '检测到扫码请求，是否登录 PC 端？',
+        success: async (res) => {
+          if (res.confirm) {
+            const { code } = await Taro.login();
+            await userApi.confirmPCLogin(code, scene);
+            Taro.showToast({ title: '登录成功' });
+          }
+        }
+      });
+    }
+  });
+
   const [quote] = useState(() => {
     const quotes = [
       '每个当下，都是新的开始。',
@@ -480,6 +541,13 @@ export default function Index() {
               <Text className='handle-text'>{showTools ? '回到共鸣' : '共鸣空间表'}</Text>
             </View>
             <View className='tools-content'>
+              {/* PC Scan Login Entry - Moved to TOP to avoid TabBar clash */}
+              <View className='pc-login-entry' onClick={handleScanLogin}>
+                <View className='pc-icon' />
+                <Text className='pc-text'>扫码登录 PC 版</Text>
+                <View className='arrow-icon' />
+              </View>
+
               <View className='tools-tabs'>
                 <View className={`tool-tab ${mode === 'muyu' ? 'active' : ''}`} onClick={() => setMode('muyu')}>解压律动</View>
                 <View className={`tool-tab ${mode === 'bottle' ? 'active' : ''}`} onClick={() => setMode('bottle')}>情绪瓶子</View>

@@ -2,8 +2,8 @@ import Taro from '@tarojs/taro'
 
 // 读取环境变量，按 env 切换
 const BASE_URL = process.env.NODE_ENV === 'development'
-  ? 'https://dev-api.example.com'
-  : 'https://api.example.com'
+  ? 'http://192.168.22.30:3000/api'
+  : 'http://47.96.73.61:3010/api'
 
 // 请求超时时间（ms）
 const TIMEOUT = 10000
@@ -39,6 +39,7 @@ function request<T = any>(options: RequestOptions): Promise<T> {
         ...options.header,
       },
       success(res) {
+        console.log('API Response:', options.url, res.statusCode, res.data);
         const result = res.data as ResponseData<T>
         if (res.statusCode === 200 && result.code === 0) {
           resolve(result.data)

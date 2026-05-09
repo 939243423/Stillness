@@ -14,4 +14,10 @@ export const userApi = {
   /** 微信登录 */
   wxLogin: (code: string) =>
     http.post<{ token: string; userInfo: UserInfo }>('/auth/wx-login', { code }),
+  /** 模拟扫码成功（通知服务器已扫码） */
+  pcLoginScan: (uuid: string) =>
+    http.post('/auth/pc-login-scan', { uuid }),
+  /** 确认 PC 端扫码登录 */
+  confirmPCLogin: (code: string, uuid: string) =>
+    http.post('/auth/pc-login-confirm', { code, uuid }),
 }
